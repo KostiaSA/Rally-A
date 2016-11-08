@@ -10,7 +10,7 @@ declare var $: any;
 
 declare module jqwidgets {
     export function createInstance(selector: string, widgetName: string, params?: any): any;
-    
+
     export class widget
     {
         constructor(selector: string, options?: Object);
@@ -3573,7 +3573,7 @@ declare module jqwidgets {
     }// jqxSwitchButton
 
     export interface TabsOptions {
-        // TabsOptions properties
+        // TabsOptions properties77
         animationType?: string;
         autoHeight?: boolean;
         closeButtonSize?: number;
