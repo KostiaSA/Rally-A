@@ -1,0 +1,14 @@
+.idea
+node_modules
+bower_components
+icons
+platforms
+plugins
+fonts
+*.js
+*.map
+*.rar
+*.zip
+app_bundle.js
+
+
