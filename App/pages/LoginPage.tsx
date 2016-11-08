@@ -1,7 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {getDeepClone} from "../utils/getDeepClone";
-import {Input} from "../components/Input";
 
 
 export interface ILoginPageProps {
