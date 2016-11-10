@@ -1,20 +1,35 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {Button} from "./components/Button";
 import {Router, Route, Link} from "react-router";
 import {LoginPage} from "./pages/LoginPage";
-import TabsOptions = jqwidgets.TabsOptions;
 import {getRandomString} from "./utils/getRandomString";
+import {observable, autorun} from "mobx";
+import {appState} from "./AppState";
+import {observer} from "mobx-react";
 
-interface IPage {
+export interface IAppPage {
     icon: string;
     color: string;
     content: React.ReactElement<any>;
     onClick?: ()=>void;
 }
 
+export let app: App;
 
-export class App extends React.Component<any,any> {
+export function setApp(_app: App) {
+    app = _app;
+
+    // autorun(() => {
+    //     if (app)
+    //         console.log("app.winHeight " + appState.winHeight);
+    //     else
+    //         console.log("жопа ")
+    // })
+}
+
+@observer export class App extends React.Component<any,any> {
+
+
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
@@ -22,43 +37,43 @@ export class App extends React.Component<any,any> {
 
         this.pages = [];
 
-        let loginPage: IPage = {
+        appState.loginPage = {
             icon: "fa-user",
             color: "royalblue",
             content:<LoginPage/>
         }
-        this.pages.push(loginPage);
-        this.activePage = loginPage;
+        this.pages.push(appState.loginPage);
+        appState.activePage = appState.loginPage;
 
-        let flagPage: IPage = {
+        appState.flagPage = {
             icon: "fa-flag-checkered",
             color: "black",
             content:<div>flag</div>
         }
-        this.pages.push(flagPage);
+        this.pages.push(appState.flagPage);
 
-        let carPage: IPage = {
+        let carPage: IAppPage = {
             icon: "fa-car",
             color: "coral",
             content:<div>car</div>
         }
         this.pages.push(carPage);
 
-        let cardPage: IPage = {
+        let cardPage: IAppPage = {
             icon: "fa-id-card-o",
             color: "olive",
             content:<div>card</div>
         }
         this.pages.push(cardPage);
 
-        let cogPage: IPage = {
+        let cogPage: IAppPage = {
             icon: "fa-cog",
             color: "gray",
             content:<div>cog</div>
         }
         this.pages.push(cogPage);
 
-        let chevronPage: IPage = {
+        let chevronPage: IAppPage = {
             icon: "fa-chevron-right",
             color: "gray",
             content:<div>chevron</div>
@@ -67,21 +82,30 @@ export class App extends React.Component<any,any> {
     }
 
     nativeTabs: Element;
-    activePage: IPage;
-    pages: IPage[];
+    pages: IAppPage[];
 
-    handlePageClick(){
+
+    handlePageClick() {
 
     }
 
     componentDidMount() {
-
+        window.addEventListener("resize", ()=> {
+            appState.winWidth = $(window).width();
+            appState.winHeight = $(window).height();
+            this.forceUpdate();
+            console.log(appState.winWidth, appState.winHeight);
+        });
     };
 
 
     render(): any {
-
+        console.log("render app");
         let butPadding = 5;
+
+        let navBarHiddenClass = "";
+        if (appState.activePage === appState.loginPage)
+            navBarHiddenClass = "hidden";
 
         return (
 
@@ -91,21 +115,22 @@ export class App extends React.Component<any,any> {
             //     <li ><a href="#">Messages</a></li>
             // </ul>
 
+
             <div>
                 <div className="content">
-                    {this.pages.map<React.ReactElement<any>>((item: IPage,index:number)=> {
+                    {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number)=> {
                         return (
-                            <div key={index} className={item!==this.activePage?"hidden":""}>{item.content}</div>
+                            <div key={index} className={item!==appState.activePage?"hidden":""}>{item.content}</div>
                         )
                     })}
                 </div>
-                <nav className="navbar navbar-default navbar-fixed-bottom">
+                <nav className={"navbar navbar-default navbar-fixed-bottom "+navBarHiddenClass}>
                     <div className="btn-group" role="group" style={{padding:5, textAlign:"center"}}>
-                        {this.pages.map<React.ReactElement<any>>((item: IPage,index:number)=> {
+                        {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number)=> {
 
-                            let onclick=()=>{
+                            let onclick = ()=> {
                                 console.log("cl1");
-                                this.activePage=item;
+                                appState.activePage = item;
                                 this.forceUpdate();
                             };
 
@@ -144,3 +169,4 @@ export class App extends React.Component<any,any> {
     }
 
 }
+
