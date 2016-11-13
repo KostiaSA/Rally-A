@@ -2,6 +2,8 @@ import {observable} from "mobx";
 import {IAppPage} from "./App";
 
 export class AppState {
+    sessionId:string;
+
     @observable activePage: IAppPage;
 
     @observable winHeight: number;
@@ -9,6 +11,8 @@ export class AppState {
 
     loginPage: IAppPage;
     flagPage: IAppPage;
+
+
 
 }
 

@@ -2,123 +2,63 @@ import * as  React from "react";
 import * as  ReactDOM from "react-dom";
 import {Router, Route, Link} from "react-router"
 import {App, app, setApp} from "./App";
+import {getIsCordovaApp} from "./utils/getIsCordovaApp";
+import {appState} from "./AppState";
+import {getRandomString} from "./utils/getRandomString";
 //import  {RouteHandler} from "react-router";
 //import  {DefaultRoute} from "react-router";
 //import  {Router, Route, DefaultRoute, RouteHandler, Link, NotFoundRoute} from "react-router";
 
 
-var myapp = {
-    // Application Constructor
-    initialize: function () {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function () {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function () {
-        myapp.receivedEvent('deviceready');
-        ReactDOM.render(<App ref={(e:any)=>setApp(e)}/>, document.body);
+if (getIsCordovaApp()) {
 
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function (id: any) {
-        // var parentElement = document.getElementById(id);
-        // var listeningElement = parentElement!.querySelector('.listening');
-        // var receivedElement = parentElement!.querySelector('.received');
+    var myapp = {
+        // Application Constructor
+        initialize: function () {
+            this.bindEvents();
+        },
+        // Bind Event Listeners
         //
-        // listeningElement.setAttribute('style', 'display:none;');
-        // receivedElement.setAttribute('style', 'display:block;');
+        // Bind any events that are required on startup. Common events are:
+        // 'load', 'deviceready', 'offline', and 'online'.
+        bindEvents: function () {
+            document.addEventListener('deviceready', this.onDeviceReady, false);
+        },
+        // deviceready Event Handler
         //
-        // console.log('Received Event: ' + id);
-    }
-};
+        // The scope of 'this' is the event. In order to call the 'receivedEvent'
+        // function, we must explicitly call 'app.receivedEvent(...);'
+        onDeviceReady: function () {
+            myapp.receivedEvent('deviceready');
+            ReactDOM.render(<App ref={(e:any)=>setApp(e)}/>, document.body);
 
-myapp.initialize();
+        },
+        // Update DOM on a Received Event
+        receivedEvent: function (id: any) {
+            // var parentElement = document.getElementById(id);
+            // var listeningElement = parentElement!.querySelector('.listening');
+            // var receivedElement = parentElement!.querySelector('.received');
+            //
+            // listeningElement.setAttribute('style', 'display:none;');
+            // receivedElement.setAttribute('style', 'display:block;');
+            //
+            // console.log('Received Event: ' + id);
+        }
+    };
+
+    myapp.initialize();
+}
+else {
+    ReactDOM.render(<App ref={(e:any)=>setApp(e)}/>, document.body);
+}
+
+if (!window.localStorage.getItem("sessionId")) {
+    window.localStorage.setItem("sessionId", getRandomString());
+}
+
+appState.sessionId = window.localStorage.getItem("sessionId")!;
+
+console.log("sessionId",appState.sessionId);
 
 
-/* Components */
-//
-// var App = React.createClass({
-//     render: function () {
-//         return (
-//             <div className="App">
-//                 <div id="header"></div>
-//                 <div>content</div>
-//                 <div id="footer"></div>
-//             </div>
-//         );
-//     }
-// });
-//
-// var Header = React.createClass({
-//     render: function () {
-//         return <p>This is the header:<Router.RouteHandler/></p>;
-//     }
-// });
-//
-// var Footer = React.createClass({
-//     render: function () {
-//         return <p>This is the footer:<RouteHandler/></p>;
-//     }
-// });
-//
-// var Default = React.createClass({
-//     render: function() {
-//         return <span>default view</span>;
-//     }
-// });
-//
-// var HeaderView1 = React.createClass({
-//     render: function() {
-//         return <span>header view one</span>;
-//     }
-// });
-//
-// var FooterView1 = React.createClass({
-//     render: function() {
-//         return <span>footer view one</span>;
-//     }
-// });
-//
-// var Null = React.createClass({
-//     render: function() {
-//         return false;
-//     }
-// });
-//
 
-//
-// /* Routes */
-//
-// var headerRoutes = (
-//     <Route name="header" path="/"  handler={Header}>
-//         <Route name="view1" handler={HeaderView1}/>
-//         <DefaultRoute handler={Default}/>
-//         <NotFoundRoute handler={Null}/>
-//     </Route>
-// );
-//
-// Router.run(headerRoutes, function (Handler) {
-//     React.render(<Handler/>, document.getElementById('header'));
-// });
-//
-
-// var footerRoutes = (
-//     <Route name="footer" path="/" handler={Footer}>
-//         <Route name="view1" handler={FooterView1}/>
-//         {/*<DefaultRoute handler={Default}/>*/}
-//         {/*<NotFoundRoute handler={Null}/>*/}
-//     </Route>
-// );
-//
-// Router.run(footerRoutes, function (Handler) {
-//     React.render(<Handler/>, document.getElementById('footer'));
-// });
