@@ -8,6 +8,7 @@ import {httpRequest} from "../utils/httpRequest";
 import {IGetEncryptKeyReq, IGetEncryptKeyAns, GET_ENCRYPT_KEY_CMD, ILoginReq, ILoginAns, LOGIN_CMD} from "../api/api";
 import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
+import {getIsCordovaApp} from "../utils/getIsCordovaApp";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -31,7 +32,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     @observable httpRequestRunning: boolean;
 
     handleButtonClick = ()=> {
-        let timeIndex=setTimeout(()=> {
+        let timeIndex = setTimeout(()=> {
             this.httpRequestRunning = true;
         }, 500);
 
@@ -73,6 +74,11 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
 
     };
 
+    handleAndroidClick = ()=> {
+
+
+    };
+
     render(): any {
         console.log("render login page");
 
@@ -86,6 +92,18 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
         let butContent: any = "Авторизация";
         if (this.httpRequestRunning)
             butContent =<span>Авторизация <i className="fa fa-circle-o-notch fa-spin fa-fw"></i></span>;
+
+        let androidButton: any = (
+            <button className="btn btn-default pull-right" onClick={this.handleAndroidClick}
+                    disabled={this.httpRequestRunning}>
+                <span className="fa fa-android" style={{color:"#a4ca39", fontSize:18}}/>
+                <span style={{marginLeft:5}}>Android install</span>
+            </button>
+        );
+
+        if (getIsCordovaApp()) {
+            androidButton = undefined;
+        }
 
         return (
             <div className="container">
@@ -132,6 +150,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                             <button className="btn btn-default" onClick={this.handleTest1Click}
                                     disabled={this.httpRequestRunning}>Test1
                             </button>
+                            {androidButton}
                         </div>
                     </div>
                 </div>
