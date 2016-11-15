@@ -1,7 +1,8 @@
 import * as Promise from "bluebird";
-import {IReq, IAns, GET_ENCRYPT_KEY} from "../api/api";
+import {IReq, IAns, GET_ENCRYPT_KEY_CMD} from "../api/api";
 import {appState} from "../AppState";
 import crypto = require("crypto-js");
+import {getIsCordovaApp} from "./getIsCordovaApp";
 
 export function httpRequest<TReq extends IReq,TAns extends IAns>(req: TReq): Promise<TAns> {
 
@@ -9,24 +10,28 @@ export function httpRequest<TReq extends IReq,TAns extends IAns>(req: TReq): Pro
         (resolve: (obj: TAns) => void, reject: (error: string) => void) => {
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", 'api', true);
+            let url = "api";
+            if (getIsCordovaApp())
+                url = "http://192.168.0.14:3000/api";
+            xhr.open("POST", url, true);
             xhr.setRequestHeader('Content-type', "application/json;charset=UTF-8");
 
             xhr.onload = function () {
-                // do something to response
-
                 let ansBody = JSON.parse(this.responseText) as TAns;
                 if (ansBody.error)
                     reject(ansBody.error);
                 else {
                     resolve(ansBody);
                 }
-                console.log();
+            };
+
+            xhr.onerror = function (ev: Event) {
+                reject("нет связи с сервером");
             };
 
             let bodyEncrypted = "";
-            if (req.cmd !== GET_ENCRYPT_KEY)
-                bodyEncrypted = crypto.MD5(JSON.stringify(req), appState.encryptKey);
+            if (req.cmd !== GET_ENCRYPT_KEY_CMD)
+                bodyEncrypted = crypto.AES.encrypt(JSON.stringify(req), appState.encryptKey).toString();
 
             let fullReq = {
                 sessionId: appState.sessionId,
@@ -39,4 +44,4 @@ export function httpRequest<TReq extends IReq,TAns extends IAns>(req: TReq): Pro
         });
 
 
-};
+}

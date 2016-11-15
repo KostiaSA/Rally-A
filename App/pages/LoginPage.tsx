@@ -5,7 +5,8 @@ import {NotifyResize} from "react-notify-resize";
 import {observer} from "mobx-react";
 import {appState} from "../AppState";
 import {httpRequest} from "../utils/httpRequest";
-import {IGetEncryptKeyReq, IGetEncryptKeyAns, GET_ENCRYPT_KEY} from "../api/api";
+import {IGetEncryptKeyReq, IGetEncryptKeyAns, GET_ENCRYPT_KEY_CMD, ILoginReq, ILoginAns, LOGIN_CMD} from "../api/api";
+import {observable} from "mobx";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -29,19 +30,39 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     //     console.log(event);
     // }
 
+    @observable httpRequestRunning: boolean;
+
     handleButtonClick = ()=> {
-        appState.activePage = appState.flagPage;
+        this.httpRequestRunning = true;
+        httpRequest<IGetEncryptKeyReq,IGetEncryptKeyAns>({cmd: GET_ENCRYPT_KEY_CMD})
+            .then((ans: IGetEncryptKeyAns)=> {
+                this.httpRequestRunning = false;
+                appState.encryptKey = ans.encryptKey;
+                console.log(ans);
+
+                let loginReq: ILoginReq = {
+                    cmd: LOGIN_CMD,
+                    login: "Sidorov",
+                    password: "1"
+                };
+
+                httpRequest<ILoginReq,ILoginAns>(loginReq)
+                    .then((a: any)=> {
+                        appState.activePage = appState.flagPage;
+                    })
+                    .catch((err: any)=> {
+                        alert(err);
+                    });
+
+            })
+            .catch((err: any)=> {
+                this.httpRequestRunning = false;
+                alert(err);
+            });
     };
 
     handleTest1Click = ()=> {
 
-        httpRequest<IGetEncryptKeyReq,IGetEncryptKeyAns>({cmd: GET_ENCRYPT_KEY})
-            .then((ans: any)=> {
-                console.log(ans);
-            })
-            .catch((err:any)=>{
-                console.error(err);
-            });
 
         // let x = {
         //     fa: "Иванов",
@@ -71,6 +92,10 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
         }
 
 
+        let butContent: any = "Авторизация";
+        if (this.httpRequestRunning)
+            butContent =<span>Авторизация <i className="fa fa-circle-o-notch fa-spin fa-fw"></i></span>;
+
         return (
             <div className="container">
                 <div className="row">
@@ -85,18 +110,25 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                                 <div className="input-group">
                                     <span className="input-group-addon"><span
                                         className="fa fa-user"></span></span>
-                                    <input type="text" className="form-control" placeholder="Логин" required/>
+                                    <input type="text" className="form-control" placeholder="Логин" required
+                                           disabled={this.httpRequestRunning}/>
                                 </div>
                             </div>
                             <div className="form-group">
                                 <div className="input-group">
                                     <span className="input-group-addon"><span
                                         className="fa fa-lock"></span></span>
-                                    <input type="password" className="form-control" placeholder="Пароль" required/>
+                                    <input type="password" className="form-control" placeholder="Пароль" required
+                                           disabled={this.httpRequestRunning}/>
                                 </div>
                             </div>
-                            <button className="btn btn-default" onClick={this.handleButtonClick}>Вход</button>
-                            <button className="btn btn-default" onClick={this.handleTest1Click}>Test1</button>
+                            <button className="btn btn-default" onClick={this.handleButtonClick}
+                                    disabled={this.httpRequestRunning}>
+                                {butContent}
+                            </button>
+                            <button className="btn btn-default" onClick={this.handleTest1Click}
+                                    disabled={this.httpRequestRunning}>Test1
+                            </button>
                         </div>
                     </div>
                 </div>
