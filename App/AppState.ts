@@ -13,6 +13,7 @@ export class AppState {
 
     loginPage: IAppPage;
     flagPage: IAppPage;
+    cardPage: IAppPage;
 
     encryptKey: string;
 //    encryptKey:string;

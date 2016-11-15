@@ -6,6 +6,7 @@ import {getRandomString} from "./utils/getRandomString";
 import {observable, autorun} from "mobx";
 import {appState} from "./AppState";
 import {observer} from "mobx-react";
+import {CardPage} from "./pages/CardPage";
 
 export interface IAppPage {
     icon: string;
@@ -27,7 +28,8 @@ export function setApp(_app: App) {
     // })
 }
 
-@observer export class App extends React.Component<any,any> {
+@observer
+export class App extends React.Component<any,any> {
 
 
     constructor(props: any, context: any) {
@@ -37,13 +39,13 @@ export function setApp(_app: App) {
 
         this.pages = [];
 
-        appState.loginPage = {
-            icon: "fa-user",
-            color: "royalblue",
-            content:<LoginPage/>
+
+        appState.cardPage = {
+            icon: "fa-id-card-o",
+            color: "olive",
+            content:<CardPage></CardPage>
         }
-        this.pages.push(appState.loginPage);
-        appState.activePage = appState.loginPage;
+        this.pages.push(appState.cardPage);
 
         appState.flagPage = {
             icon: "fa-flag-checkered",
@@ -59,12 +61,6 @@ export function setApp(_app: App) {
         }
         this.pages.push(carPage);
 
-        let cardPage: IAppPage = {
-            icon: "fa-id-card-o",
-            color: "olive",
-            content:<div>card</div>
-        }
-        this.pages.push(cardPage);
 
         let cogPage: IAppPage = {
             icon: "fa-cog",
@@ -72,6 +68,14 @@ export function setApp(_app: App) {
             content:<div>cog</div>
         }
         this.pages.push(cogPage);
+
+        appState.loginPage = {
+            icon: "fa-user",
+            color: "royalblue",
+            content:<LoginPage/>
+        }
+        this.pages.push(appState.loginPage);
+        appState.activePage = appState.loginPage;
 
         let chevronPage: IAppPage = {
             icon: "fa-chevron-right",

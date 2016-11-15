@@ -22,20 +22,13 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
         super(props, context);
         this.props = props;
         this.context = context;
-//        this.login = appState.login;
-
-        console.log("login page constr");
     }
 
     componentDidMount() {
     };
 
-    // onResize = (event: { width: number, height: number })=> {
-    //     console.log(event);
-    // }
 
     @observable httpRequestRunning: boolean;
-//    @observable login: string;
 
     handleButtonClick = ()=> {
         let timeIndex=setTimeout(()=> {
@@ -59,7 +52,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                         clearTimeout(timeIndex);
                         window.localStorage.setItem("login", appState.login);
                         window.localStorage.setItem("password", appState.password);
-                        appState.activePage = appState.flagPage;
+                        appState.activePage = appState.cardPage;
                     })
                     .catch((err: any)=> {
                         this.httpRequestRunning = false;
@@ -77,22 +70,6 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
 
     handleTest1Click = ()=> {
 
-
-        // let x = {
-        //     fa: "Иванов",
-        //     im: "Авраам"
-        // };
-        //
-        // var xhr = new XMLHttpRequest();
-        // xhr.open("POST", 'api', true);
-        // xhr.setRequestHeader('Content-type', "application/json;charset=UTF-8");
-        // xhr.onload = function () {
-        //     // do something to response
-        //     console.log(JSON.parse(this.responseText));
-        // };
-        //
-        //
-        // xhr.send(JSON.stringify(x));
 
     };
 
