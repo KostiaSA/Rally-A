@@ -7,6 +7,7 @@ import {appState} from "../AppState";
 import {httpRequest} from "../utils/httpRequest";
 import {IGetEncryptKeyReq, IGetEncryptKeyAns, GET_ENCRYPT_KEY_CMD, ILoginReq, ILoginAns, LOGIN_CMD} from "../api/api";
 import {observable} from "mobx";
+import SyntheticEvent = React.SyntheticEvent;
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -21,6 +22,9 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
         super(props, context);
         this.props = props;
         this.context = context;
+//        this.login = appState.login;
+
+        console.log("login page constr");
     }
 
     componentDidMount() {
@@ -31,32 +35,42 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     // }
 
     @observable httpRequestRunning: boolean;
+//    @observable login: string;
 
     handleButtonClick = ()=> {
-        this.httpRequestRunning = true;
+        let timeIndex=setTimeout(()=> {
+            this.httpRequestRunning = true;
+        }, 500);
+
         httpRequest<IGetEncryptKeyReq,IGetEncryptKeyAns>({cmd: GET_ENCRYPT_KEY_CMD})
             .then((ans: IGetEncryptKeyAns)=> {
-                this.httpRequestRunning = false;
+
                 appState.encryptKey = ans.encryptKey;
-                console.log(ans);
 
                 let loginReq: ILoginReq = {
                     cmd: LOGIN_CMD,
-                    login: "Sidorov",
-                    password: "1"
+                    login: appState.login,
+                    password: appState.password
                 };
 
                 httpRequest<ILoginReq,ILoginAns>(loginReq)
                     .then((a: any)=> {
+                        this.httpRequestRunning = false;
+                        clearTimeout(timeIndex);
+                        window.localStorage.setItem("login", appState.login);
+                        window.localStorage.setItem("password", appState.password);
                         appState.activePage = appState.flagPage;
                     })
                     .catch((err: any)=> {
+                        this.httpRequestRunning = false;
+                        clearTimeout(timeIndex);
                         alert(err);
                     });
 
             })
             .catch((err: any)=> {
                 this.httpRequestRunning = false;
+                clearTimeout(timeIndex);
                 alert(err);
             });
     };
@@ -110,7 +124,12 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                                 <div className="input-group">
                                     <span className="input-group-addon"><span
                                         className="fa fa-user"></span></span>
-                                    <input type="text" className="form-control" placeholder="Логин" required
+                                    <input type="text"
+                                           className="form-control"
+                                           placeholder="Логин"
+                                           required
+                                           value={appState.login}
+                                           onChange={(e:any)=>{appState.login=e.target.value}}
                                            disabled={this.httpRequestRunning}/>
                                 </div>
                             </div>
@@ -118,8 +137,15 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                                 <div className="input-group">
                                     <span className="input-group-addon"><span
                                         className="fa fa-lock"></span></span>
-                                    <input type="password" className="form-control" placeholder="Пароль" required
-                                           disabled={this.httpRequestRunning}/>
+                                    <input type="password"
+                                           className="form-control"
+                                           placeholder="Пароль"
+                                           required
+                                           disabled={this.httpRequestRunning}
+                                           value={appState.password}
+                                           onChange={(e:any)=>{appState.password=e.target.value}}
+
+                                    />
                                 </div>
                             </div>
                             <button className="btn btn-default" onClick={this.handleButtonClick}

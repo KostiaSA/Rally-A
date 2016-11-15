@@ -2,9 +2,9 @@ import {observable} from "mobx";
 import {IAppPage} from "./App";
 
 export class AppState {
-    sessionId:string;
-    login:string;
-    password:string;
+    @observable sessionId: string;
+    @observable login: string;
+    @observable password: string;
 
     @observable activePage: IAppPage;
 
@@ -14,7 +14,7 @@ export class AppState {
     loginPage: IAppPage;
     flagPage: IAppPage;
 
-    encryptKey:string;
+    encryptKey: string;
 //    encryptKey:string;
 
 
