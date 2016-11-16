@@ -78,12 +78,15 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     };
 
     handleAndroidClick = ()=> {
-        showModal(<AndroidDownloadModal onClose={()=>{}}/>);
+
+        if (platform.os && platform.os.family && platform.os.family.toLowerCase().indexOf("android") >= 0)
+            window.location.href = config.apkUrl;
+        else
+            showModal(<AndroidDownloadModal onClose={()=>{}}/>);
 
     };
 
     render(): any {
-        console.log("render login page");
 
         let logoSize = 270;
         if (appState.winHeight < 600) {

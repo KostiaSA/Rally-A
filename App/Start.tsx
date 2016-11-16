@@ -9,6 +9,7 @@ import {getRandomString} from "./utils/getRandomString";
 //import  {DefaultRoute} from "react-router";
 //import  {Router, Route, DefaultRoute, RouteHandler, Link, NotFoundRoute} from "react-router";
 
+
 if (!window.localStorage.getItem("sessionId")) {
     window.localStorage.setItem("sessionId", getRandomString());
 }
@@ -17,10 +18,11 @@ appState.sessionId = window.localStorage.getItem("sessionId")!;
 appState.login = window.localStorage.getItem("login")!;
 appState.password = window.localStorage.getItem("password")!;
 
-console.log("sessionId",appState.sessionId);
-console.log("login",appState.login);
-console.log("password",appState.password);
 
+console.log("sessionId", appState.sessionId);
+console.log("login", appState.login);
+console.log("password", appState.password);
+console.log("platform", platform);
 
 
 if (getIsCordovaApp()) {
