@@ -98,13 +98,11 @@ export class App extends React.Component<any,any> {
             appState.winWidth = $(window).width();
             appState.winHeight = $(window).height();
             this.forceUpdate();
-            console.log(appState.winWidth, appState.winHeight);
         });
     };
 
 
     render(): any {
-        console.log("render app");
         let butPadding = 5;
 
         let navBarHiddenClass = "";
@@ -112,14 +110,6 @@ export class App extends React.Component<any,any> {
             navBarHiddenClass = "hidden";
 
         return (
-
-            // <ul className="nav nav-pills">
-            //     <li className="active"><a href="#">Home</a></li>
-            //     <li ><a href="#">Profile</a></li>
-            //     <li ><a href="#">Messages</a></li>
-            // </ul>
-
-
             <div>
                 <div className="content">
                     {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number)=> {
@@ -145,27 +135,6 @@ export class App extends React.Component<any,any> {
                                 </div>
                             )
                         })}
-
-                        {/*// <button type="button" className="btn btn-default">*/}
-                        {/*//     <i className="fa fa-flag-checkered"*/}
-                        {/*//        style={{fontSize:20,color:"black",paddingLeft:butPadding,paddingRight:butPadding}}></i>*/}
-                        {/*// </button>*/}
-                        {/*// <button type="button" className="btn btn-default">*/}
-                        {/*//     <i className="fa fa-car"*/}
-                        {/*//        style={{fontSize:20,color:"coral",paddingLeft:butPadding,paddingRight:butPadding}}></i>*/}
-                        {/*// </button>*/}
-                        {/*<button type="button" className="btn btn-default">*/}
-                        {/*<i className="fa fa-id-card-o"*/}
-                        {/*style={{fontSize:20,color:"olive",paddingLeft:butPadding,paddingRight:butPadding}}></i>*/}
-                        {/*</button>*/}
-                        {/*<button type="button" className="btn btn-default">*/}
-                        {/*<i className="fa fa-cog"*/}
-                        {/*style={{fontSize:20,color:"gray",paddingLeft:butPadding,paddingRight:butPadding}}></i>*/}
-                        {/*</button>*/}
-                        {/*<button type="button" className="btn btn-default">*/}
-                        {/*<i className="fa fa-chevron-right"*/}
-                        {/*style={{fontSize:20,color:"gray",paddingLeft:butPadding,paddingRight:butPadding}}></i>*/}
-                        {/*</button>*/}
                     </div>
                 </nav>
             </div>
