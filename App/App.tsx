@@ -7,6 +7,7 @@ import {observable, autorun} from "mobx";
 import {appState} from "./AppState";
 import {observer} from "mobx-react";
 import {CardPage} from "./pages/CardPage";
+import {FlagPage} from "./pages/FlagPage";
 
 export interface IAppPage {
     icon: string;
@@ -50,7 +51,7 @@ export class App extends React.Component<any,any> {
         appState.flagPage = {
             icon: "fa-flag-checkered",
             color: "black",
-            content:<div>flag</div>
+            content:<FlagPage></FlagPage>
         }
         this.pages.push(appState.flagPage);
 
