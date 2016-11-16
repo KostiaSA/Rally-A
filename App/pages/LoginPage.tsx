@@ -11,6 +11,7 @@ import SyntheticEvent = React.SyntheticEvent;
 import {getIsCordovaApp} from "../utils/getIsCordovaApp";
 import {showModal} from "../modals/showModal";
 import {AndroidDownloadModal} from "../modals/AndroidDownloadModal";
+import {config} from "../config/config";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -115,7 +116,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                         <div className="text-center" style={{ height:logoSize, paddingTop:15,overflow:"hidden"}}>
                             <img src={`img/login${logoSize}.jpg`} style={{}}/>
                         </div>
-                        <h2 className="text-center">Северный лес</h2>
+                        <h2 className="text-center">{config.appName}</h2>
                         <div className="form">
                             <div className="form-group">
                                 <div className="input-group">

@@ -20,6 +20,7 @@
     "material-ui": "^0.16.1",
     "mobx": "^2.6.2",
     "mobx-react": "^3.5.9",
+    "qrcode.react": "^0.6.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-notify-resize": "^2.0.2",

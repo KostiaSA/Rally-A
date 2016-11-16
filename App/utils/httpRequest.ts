@@ -3,6 +3,7 @@ import {IReq, IAns, GET_ENCRYPT_KEY_CMD} from "../api/api";
 import {appState} from "../AppState";
 import crypto = require("crypto-js");
 import {getIsCordovaApp} from "./getIsCordovaApp";
+import {config} from "../config/config";
 
 export function httpRequest<TReq extends IReq,TAns extends IAns>(req: TReq): Promise<TAns> {
 
@@ -12,7 +13,7 @@ export function httpRequest<TReq extends IReq,TAns extends IAns>(req: TReq): Pro
             var xhr = new XMLHttpRequest();
             let url = "api";
             if (getIsCordovaApp())
-                url = "http://192.168.0.14:3000/api";
+                url = config.apiUrl;
             xhr.open("POST", url, true);
             xhr.setRequestHeader('Content-type', "application/json;charset=UTF-8");
 

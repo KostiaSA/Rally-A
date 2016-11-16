@@ -10,6 +10,10 @@ import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import {getIsCordovaApp} from "../utils/getIsCordovaApp";
 import {Modal, IModalProps} from "./Modal";
+import * as QRCodeReact from "qrcode.react";
+import {config} from "../config/config";
+
+let QRCode = QRCodeReact as any;
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -30,16 +34,19 @@ export class AndroidDownloadModal extends React.Component<IAndroidDownloadModalP
         return (
             <Modal>
                 <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                    <h4 className="modal-title">Modal title</h4>
+                    <h4 className="modal-title">Установка .apk на Android</h4>
                 </div>
                 <div className="modal-body">
-                    <p>One fine body&hellip;</p>
+                    <p>
+                        Отсканируйте этот код с Android-устройства, или вручную откройте в браузере ссылку<br/>
+                        <i>{config.apkUrl}</i>
+                    </p>
+                    <div className="text-center">
+                        <QRCode value={config.apkUrl}/>
+                    </div>
                 </div>
                 <div className="modal-footer">
-                    <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" className="btn btn-primary">Save changes</button>
+                    <button type="button" className="btn btn-default" data-dismiss="modal">Закрыть</button>
                 </div>
             </Modal>
         )
