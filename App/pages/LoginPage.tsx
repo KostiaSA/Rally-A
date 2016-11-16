@@ -9,6 +9,8 @@ import {IGetEncryptKeyReq, IGetEncryptKeyAns, GET_ENCRYPT_KEY_CMD, ILoginReq, IL
 import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import {getIsCordovaApp} from "../utils/getIsCordovaApp";
+import {showModal} from "../modals/showModal";
+import {AndroidDownloadModal} from "../modals/AndroidDownloadModal";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -75,7 +77,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     };
 
     handleAndroidClick = ()=> {
-
+        showModal(<AndroidDownloadModal onClose={()=>{}}/>);
 
     };
 
@@ -143,12 +145,9 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                                     />
                                 </div>
                             </div>
-                            <button className="btn btn-default" onClick={this.handleButtonClick}
+                            <button className="btn btn-primary" onClick={this.handleButtonClick}
                                     disabled={this.httpRequestRunning}>
                                 {butContent}
-                            </button>
-                            <button className="btn btn-default" onClick={this.handleTest1Click}
-                                    disabled={this.httpRequestRunning}>Test1
                             </button>
                             {androidButton}
                         </div>
