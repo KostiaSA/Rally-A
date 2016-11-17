@@ -22,6 +22,8 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         this.context = context;
     }
 
+    @observable raceNumber:string;
+
     componentDidMount() {
 
     };
@@ -61,7 +63,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                 <div className="row">
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
                         <span>участник N:</span>
-                        <span>103</span>
+                        <span>{this.raceNumber}</span>
                     </div>
                 </div>
                 <div className="row" style={{ marginTop:20 }}>
@@ -81,43 +83,43 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                     </div>
                     <div className="col-md-10 col-md-offset-1">
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("1")}>
+                                onClick={()=>this.handleNumButtonClick("4")}>
                             4
                         </button>
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("2")}>
+                                onClick={()=>this.handleNumButtonClick("5")}>
                             5
                         </button>
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("3")}>
+                                onClick={()=>this.handleNumButtonClick("6")}>
                             6
                         </button>
                     </div>
                     <div className="col-md-10 col-md-offset-1">
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("1")}>
+                                onClick={()=>this.handleNumButtonClick("7")}>
                             7
                         </button>
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("2")}>
+                                onClick={()=>this.handleNumButtonClick("8")}>
                             8
                         </button>
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("3")}>
+                                onClick={()=>this.handleNumButtonClick("9")}>
                             9
                         </button>
                     </div>
                     <div className="col-md-10 col-md-offset-1">
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("1")}>
+                                onClick={()=>this.handleNumButtonClick("C")}>
                             C
                         </button>
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("2")}>
+                                onClick={()=>this.handleNumButtonClick("0")}>
                             0
                         </button>
                         <button className="btn btn-lg btn-default" style={numButtonStyle}
-                                onClick={()=>this.handleNumButtonClick("3")}>
+                                onClick={()=>this.handleNumButtonClick("<")}>
                             {"<"}
                         </button>
                     </div>
