@@ -9,6 +9,7 @@ fonts
 *.map
 *.rar
 *.zip
+*.apk
 app_bundle.js
 *.pdf
 
