@@ -11,5 +11,6 @@ fonts
 *.zip
 *.apk
 app_bundle.js
+!webpack.config.js
 *.pdf
 
