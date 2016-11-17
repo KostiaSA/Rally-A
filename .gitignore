@@ -4,7 +4,6 @@ bower_components
 icons
 platforms
 plugins
-fonts
 *.js
 *.map
 *.rar
@@ -12,5 +11,6 @@ fonts
 *.apk
 app_bundle.js
 !webpack.config.js
+!www/js/*.js
 *.pdf
 
