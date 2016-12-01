@@ -52,14 +52,14 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 </tr>
                                 <tr>
                                     <td>Этап</td>
-                                    <td style={gonkaStyle}>Бобруйиск, 25-сен-2017</td>
+                                    <td style={gonkaStyle}>{appState.rallyLeg ? appState.rallyLeg.num + ", " + appState.rallyLeg.name+"  (длина "+appState.rallyLeg.length+" км)" : ""}</td>
                                 </tr>
                                 <tr>
                                     <td>Пункт</td>
-                                    <td style={gonkaStyle}>село "Ебеньки"</td>
+                                    <td style={gonkaStyle}>{appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name+"  ("+appState.rallyPunkt.length+" км)" : ""}</td>
                                 </tr>
                                 <tr>
-                                    <td>Чекпоинтер</td>
+                                    <td>Судья на пункте</td>
                                     <td style={gonkaStyle}>{appState.user}</td>
                                 </tr>
                                 <tr>

@@ -6,6 +6,7 @@ export const Pilots_replTable = 4;
 export const RallyHeader_replTable = 5;
 export const RallyLeg_replTable = 6;
 export const RallyPunkt_replTable = 7;
+export const UsersLink_replTable = 9;
 
 
 export const BAD_ENCRYPT_KEY_ERROR = "BAD_ENCRYPT_KEY_ERROR";
@@ -88,6 +89,46 @@ export interface ILoadPilotsReq extends IReq {
 
 export interface ILoadPilotsAns extends IAns {
     pilots?: IPilot[];
+    dbts?: string;
+}
+
+// -------  RallyLeg ----------
+export interface IRallyLeg {
+    id: number;
+    num: string;
+    name: string;
+    date: Date;
+    length:number;
+}
+
+export const LOAD_RALLYLEG_CMD = "5";
+
+export interface ILoadRallyLegReq extends IReq {
+    dbts: string;
+}
+
+export interface ILoadRallyLegAns extends IAns {
+    rallyLeg?: IRallyLeg;
+    dbts?: string;
+}
+
+// -------  RallyPunkt ----------
+export interface IRallyPunkt {
+    id: number;
+    num: string;
+    name: string;
+    length:number;
+}
+
+export const LOAD_RALLYPUNKT_CMD = "6";
+
+export interface ILoadRallyPunktReq extends IReq {
+    login:string;
+    dbts: string;
+}
+
+export interface ILoadRallyPunktAns extends IAns {
+    rallyPunkt?: IRallyPunkt;
     dbts?: string;
 }
 
