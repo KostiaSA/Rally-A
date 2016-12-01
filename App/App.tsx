@@ -9,6 +9,8 @@ import {observer} from "mobx-react";
 import {CardPage} from "./pages/CardPage";
 import {FlagPage} from "./pages/FlagPage";
 
+
+
 export interface IAppPage {
     icon: string;
     color: string;

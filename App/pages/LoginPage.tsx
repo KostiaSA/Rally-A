@@ -56,6 +56,8 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                         clearTimeout(timeIndex);
                         window.localStorage.setItem("login", appState.login);
                         window.localStorage.setItem("password", appState.password);
+                        appState.loadTablesFromLocalStore();
+                        appState.loadTablesFromServer();
                         appState.activePage = appState.cardPage;
                     })
                     .catch((err: any)=> {
