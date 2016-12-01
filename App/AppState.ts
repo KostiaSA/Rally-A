@@ -7,11 +7,14 @@ export class AppState {
     @observable sessionId: string;
     @observable login: string;
     @observable password: string;
+    @observable user?: string;
 
     @observable activePage: IAppPage;
 
     @observable winHeight: number;
     @observable winWidth: number;
+
+    @observable lastSyncroTime: Date;
 
     loginPage: IAppPage;
     flagPage: IAppPage;
@@ -22,8 +25,8 @@ export class AppState {
     rallyHeaderDbts?: string;
     pilotsDbts?: string;
 
-    rallyHeader?: IRallyHeader;
-    pilots?: IPilot[];
+    @observable rallyHeader?: IRallyHeader;
+    @observable pilots?: IPilot[];
 
     getIsLogined() {
         return this.encryptKey !== undefined;
@@ -48,12 +51,13 @@ export class AppState {
 
         httpRequest<ILoadRallyHeaderReq,ILoadRallyHeaderAns>(req)
             .then((ans: ILoadRallyHeaderAns) => {
-                console.error(ans);
-                //this.httpRequestRunning = false;
-                //clearTimeout(timeIndex);
-                //window.localStorage.setItem("login", appState.login);
-                //window.localStorage.setItem("password", appState.password);
-                //appState.activePage = appState.cardPage;
+                if (ans.rallyHeader) {
+                    this.rallyHeaderDbts = ans.dbts;
+                    this.rallyHeader = ans.rallyHeader;
+                    window.localStorage.setItem("rallyHeaderDbts", this.rallyHeaderDbts!);
+                    window.localStorage.setItem("rallyHeader", JSON.stringify(appState.rallyHeader));
+                }
+                this.lastSyncroTime = new Date();
             })
             .catch((err: any) => {
                 console.error(err);
@@ -63,11 +67,22 @@ export class AppState {
     }
 
     loadTablesFromLocalStore() {
+        //console.error("local-store0", appState.rallyHeader);
+
+        appState.user = window.localStorage.getItem("user") || undefined;
 
         appState.rallyHeaderDbts = window.localStorage.getItem("rallyHeaderDbts") || undefined;
         if (window.localStorage.getItem("rallyHeader"))
             appState.rallyHeader = JSON.parse(window.localStorage.getItem("rallyHeader")!) as IRallyHeader;
 
+        //console.error("local-store1", appState.rallyHeader);
+
+    }
+
+    startSyncronozation() {
+        setInterval(() => {
+            this.loadTablesFromServer();
+        }, 30000);
     }
 }
 

@@ -6,6 +6,7 @@ import {httpRequest} from "../utils/httpRequest";
 import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
+import moment = require("moment");
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -47,7 +48,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 <tbody>
                                 <tr>
                                     <td>Гонка</td>
-                                    <td style={gonkaStyle}>Париж-Москва</td>
+                                    <td style={gonkaStyle}>{appState.rallyHeader ? appState.rallyHeader.num + ", " + appState.rallyHeader.name : ""}</td>
                                 </tr>
                                 <tr>
                                     <td>Этап</td>
@@ -59,11 +60,15 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 </tr>
                                 <tr>
                                     <td>Чекпоинтер</td>
-                                    <td style={gonkaStyle}>Сидоров-Кассир А.Б.</td>
+                                    <td style={gonkaStyle}>{appState.user}</td>
                                 </tr>
                                 <tr>
                                     <td>Время MSK</td>
                                     <td style={gonkaStyle}>12:47:11</td>
+                                </tr>
+                                <tr>
+                                    <td>Обмен данными</td>
+                                    <td style={gonkaStyle}>{moment(appState.lastSyncroTime).format("DD MMM YYYY,  HH:mm:ss")}</td>
                                 </tr>
                                 </tbody>
                             </table>

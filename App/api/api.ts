@@ -43,6 +43,7 @@ export interface ILoginReq extends IReq {
 }
 
 export interface ILoginAns extends IAns {
+    user:string
 }
 
 

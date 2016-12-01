@@ -34,13 +34,13 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
 
     @observable httpRequestRunning: boolean;
 
-    handleButtonClick = ()=> {
-        let timeIndex = setTimeout(()=> {
+    handleButtonClick = () => {
+        let timeIndex = setTimeout(() => {
             this.httpRequestRunning = true;
         }, 500);
 
         httpRequest<IGetEncryptKeyReq,IGetEncryptKeyAns>({cmd: GET_ENCRYPT_KEY_CMD})
-            .then((ans: IGetEncryptKeyAns)=> {
+            .then((ans: IGetEncryptKeyAns) => {
 
                 appState.encryptKey = ans.encryptKey;
 
@@ -51,35 +51,38 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                 };
 
                 httpRequest<ILoginReq,ILoginAns>(loginReq)
-                    .then((a: any)=> {
+                    .then((ans: any) => {
                         this.httpRequestRunning = false;
                         clearTimeout(timeIndex);
                         window.localStorage.setItem("login", appState.login);
                         window.localStorage.setItem("password", appState.password);
+                        appState.user = ans.user;
+                        window.localStorage.setItem("user", appState.user);
                         appState.loadTablesFromLocalStore();
                         appState.loadTablesFromServer();
                         appState.activePage = appState.cardPage;
+                        appState.startSyncronozation();
                     })
-                    .catch((err: any)=> {
+                    .catch((err: any) => {
                         this.httpRequestRunning = false;
                         clearTimeout(timeIndex);
                         alert(err);
                     });
 
             })
-            .catch((err: any)=> {
+            .catch((err: any) => {
                 this.httpRequestRunning = false;
                 clearTimeout(timeIndex);
                 alert(err);
             });
     };
 
-    handleTest1Click = ()=> {
+    handleTest1Click = () => {
 
 
     };
 
-    handleAndroidClick = ()=> {
+    handleAndroidClick = () => {
 
         if (platform.os && platform.os.family && platform.os.family.toLowerCase().indexOf("android") >= 0)
             window.location.href = config.apkUrl;

@@ -5,10 +5,13 @@ import {App, app, setApp} from "./App";
 import {getIsCordovaApp} from "./utils/getIsCordovaApp";
 import {appState} from "./AppState";
 import {getRandomString} from "./utils/getRandomString";
+import moment = require("moment");
 //import  {RouteHandler} from "react-router";
 //import  {DefaultRoute} from "react-router";
 //import  {Router, Route, DefaultRoute, RouteHandler, Link, NotFoundRoute} from "react-router";
 
+
+moment.locale("ru");
 
 if (!window.localStorage.getItem("sessionId")) {
     window.localStorage.setItem("sessionId", getRandomString());
