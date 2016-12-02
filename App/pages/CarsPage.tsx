@@ -61,21 +61,21 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th>старт.N</th>
+                                    <th style={{textAlign: "center"}}>старт.N</th>
                                     <th>пилот</th>
                                     <th>авто</th>
-                                    <th>номер</th>
+                                    <th style={{textAlign: "center"}}>номер</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 { (appState.legRegistration || []).map((regItem: ILegRegistration, index: number) => {
                                     let pilot = appState.getPilot(regItem.pilotId);
                                     return (
-                                        <tr>
+                                        <tr key={index}>
                                             <td style={{textAlign: "center"}}>{regItem.npp}</td>
                                             <td>{pilot.name}</td>
-                                            <td>{pilot.autoName}</td>
-                                            <td style={{textAlign: "center"}}>{regItem.raceNumber}</td>
+                                            <td style={{color: "coral"}}>{pilot.autoName}</td>
+                                            <td style={{textAlign: "center", color: "teal", fontWeight:"bold"}}>{regItem.raceNumber}</td>
                                         </tr>
                                     );
                                 })}

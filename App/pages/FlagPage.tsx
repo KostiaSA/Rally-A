@@ -6,6 +6,7 @@ import {httpRequest} from "../utils/httpRequest";
 import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
+import {ILegRegistration, IPilot} from "../api/api";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -22,14 +23,28 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         this.context = context;
     }
 
-    @observable raceNumber:string;
+    @observable raceNumber: string = "";
+    @observable legRegistration: ILegRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
+    @observable pilot: IPilot = appState.getPilot(this.legRegistration.pilotId);
 
     componentDidMount() {
 
     };
 
-    handleNumButtonClick = (num: string)=> {
+    handleNumButtonClick = (num: string) => {
         console.log(num);
+        if (num === "C")
+            this.raceNumber = "";
+        else if (num === "<") {
+            if (this.raceNumber.length > 0)
+                this.raceNumber = this.raceNumber.substr(0, this.raceNumber.length - 1);
+        }
+        else {
+            this.raceNumber += num;
+        }
+
+        this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
+        this.pilot = appState.getPilot(this.legRegistration.pilotId);
     }
 
     render(): any {
@@ -47,6 +62,24 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
             marginTop: 5,
             marginLeft: 5
         }
+        let clearButtonStyle: CSSProperties = {
+            paddingLeft: 24,
+            paddingRight: 24,
+            fontWeight: "normal",
+            fontFamily: "monospace",
+            marginTop: 5,
+            marginLeft: 5,
+            color: "red"
+        }
+        let backButtonStyle: CSSProperties = {
+            paddingLeft: 24,
+            paddingRight: 24,
+            fontWeight: "normal",
+            fontFamily: "monospace",
+            marginTop: 5,
+            marginLeft: 5,
+            color: "orange"
+        }
 
         return (
             <div className="container">
@@ -55,8 +88,9 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         <div className="panel panel-default">
                             <div className="panel-heading">
 
-                                <h4 className="text-center" style={{marginTop:5, marginBottom:5}}><i className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
-                                    {"ПУНКТ: "} {appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name+"  ("+appState.rallyPunkt.length+" км)" : ""}
+                                <h4 className="text-center" style={{marginTop:5, marginBottom:5}}><i
+                                    className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
+                                    {"ПУНКТ: "} {appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name + "  (" + appState.rallyPunkt.length + " км)" : ""}
                                 </h4>
                             </div>
                         </div>
@@ -64,8 +98,26 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                 </div>
                 <div className="row">
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
-                        <span>участник N:</span>
-                        <span>{this.raceNumber}</span>
+                        <table style={{width:"100%"}}>
+                            <tr>
+                                <td style={{textAlign:"center",padding:5}}>
+                                    <span>N:</span>
+                                    <span style={{  color: "teal",
+                                        fontWeight: "bold",
+                                        border: "teal solid 1px",
+                                        padding: 3
+                                     }}
+                                    >
+                                      {this.raceNumber}
+                                   </span>
+
+                                </td>
+                                <td style={{padding:5}}>
+                                    <span style={{color:"coral"}}>{this.pilot.autoName+"  "}</span>
+                                    <span>{this.pilot.name}</span>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div className="row" style={{ marginTop:20 }}>
@@ -112,7 +164,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         </button>
                     </div>
                     <div className="col-md-10 col-md-offset-1">
-                        <button className="btn btn-lg btn-default" style={numButtonStyle}
+                        <button className="btn btn-lg btn-default" style={clearButtonStyle}
                                 onClick={()=>this.handleNumButtonClick("C")}>
                             C
                         </button>
@@ -120,7 +172,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                                 onClick={()=>this.handleNumButtonClick("0")}>
                             0
                         </button>
-                        <button className="btn btn-lg btn-default" style={numButtonStyle}
+                        <button className="btn btn-lg btn-default" style={backButtonStyle}
                                 onClick={()=>this.handleNumButtonClick("<")}>
                             {"<"}
                         </button>

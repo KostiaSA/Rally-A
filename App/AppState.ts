@@ -46,7 +46,12 @@ export class AppState {
 
     getPilot(pilotId: number): IPilot {
         let ret: IPilot | undefined = (this.pilots || []).find((item: IPilot) => item.id === pilotId);
-        return ret || {id: 0, name: "?", engName: "?", autoName: "?"};
+        return ret || {id: -1, name: "", engName: "", autoName: ""};
+    }
+
+    getLegRegistrationByRaceNumber(raceNum: string): ILegRegistration {
+        let ret: ILegRegistration | undefined = (this.legRegistration || []).find((item: ILegRegistration) => item.raceNumber.trim() === raceNum.trim());
+        return ret || {id: -1, pilotId: -1, raceNumber: "", npp: -1, startTime: new Date()};
     }
 
     loadTablesFromServer() {
