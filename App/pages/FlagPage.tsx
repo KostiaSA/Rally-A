@@ -47,12 +47,28 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         this.pilot = appState.getPilot(this.legRegistration.pilotId);
     }
 
+    handleCheckClick = () => {
+
+    }
+
+    handleCheckWithTimeClick = () => {
+
+    }
+
     render(): any {
 
         let gonkaStyle: CSSProperties = {
             color: "olive",
             fontWeight: "bold"
         };
+
+        let okButtonStyle: CSSProperties = {
+            paddingLeft: 24,
+            paddingRight: 24,
+            fontWeight: "normal",
+            marginLeft: 5,
+            marginTop: 20,
+        }
 
         let numButtonStyle: CSSProperties = {
             paddingLeft: 24,
@@ -81,6 +97,11 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
             color: "orange"
         }
 
+
+        let checkEnabledClass = "disabled";
+        if (this.legRegistration.id >= 0)
+            checkEnabledClass = "";
+
         return (
             <div className="container">
                 <div className="row" style={{ marginTop:20 }}>
@@ -88,10 +109,10 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         <div className="panel panel-default">
                             <div className="panel-heading">
 
-                                <h4 className="text-center" style={{marginTop:5, marginBottom:5}}><i
+                                <h5 className="text-center" style={{marginTop:5, marginBottom:5}}><i
                                     className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
                                     {"ПУНКТ: "} {appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name + "  (" + appState.rallyPunkt.length + " км)" : ""}
-                                </h4>
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -113,7 +134,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
                                 </td>
                                 <td style={{padding:5}}>
-                                    <span style={{color:"coral"}}>{this.pilot.autoName+"  "}</span>
+                                    <span style={{color:"coral"}}>{this.pilot.autoName + "  "}</span>
                                     <span>{this.pilot.name}</span>
                                 </td>
                             </tr>
@@ -178,6 +199,20 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         </button>
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
+                        <button className={"btn btn-lg btn-primary "+checkEnabledClass}
+                                style={okButtonStyle}
+                                onClick={this.handleCheckClick}>
+                            check
+                        </button>
+                        <button className={"btn btn-lg btn-primary "+checkEnabledClass} style={okButtonStyle}
+                                onClick={this.handleCheckWithTimeClick}>
+                            check 12:01:02
+                        </button>
+                    </div>
+                </div>
+
             </div>
         );
     }
