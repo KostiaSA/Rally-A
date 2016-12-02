@@ -7,6 +7,7 @@ import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
 import moment = require("moment");
+import {ILegRegistration} from "../api/api";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -52,34 +53,32 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                     <div className="col-md-10 col-md-offset-1">
                         <div className="panel panel-default">
                             <div className="panel-heading">
-                                <h4 className="text-center">Участники</h4>
+                                <h4 className="text-center">
+                                    <i className={"fa fa-car"} style={{fontSize:16, marginRight:10}}/>
+                                    Участники этапа
+                                </h4>
                             </div>
                             <table className="table">
+                                <thead>
+                                <tr>
+                                    <th>старт.N</th>
+                                    <th>пилот</th>
+                                    <th>авто</th>
+                                    <th>номер</th>
+                                </tr>
+                                </thead>
                                 <tbody>
-                                <tr>
-                                    <td>Гонка</td>
-                                    <td style={gonkaStyle}>{appState.rallyHeader ? appState.rallyHeader.num + ", " + appState.rallyHeader.name : ""}</td>
-                                </tr>
-                                <tr>
-                                    <td>Этап</td>
-                                    <td style={gonkaStyle}>{appState.rallyLeg ? appState.rallyLeg.num + ", " + appState.rallyLeg.name+"  (длина "+appState.rallyLeg.length+" км)" : ""}</td>
-                                </tr>
-                                <tr>
-                                    <td>Пункт</td>
-                                    <td style={gonkaStyle}>{appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name+"  ("+appState.rallyPunkt.length+" км)" : ""}</td>
-                                </tr>
-                                <tr>
-                                    <td>Судья на пункте</td>
-                                    <td style={userStyle}>{appState.user}</td>
-                                </tr>
-                                <tr>
-                                    <td>Время MSK</td>
-                                    <td style={timeStyle}>{moment(new Date).format("DD MMM YYYY,  HH:mm")}</td>
-                                </tr>
-                                <tr>
-                                    <td>Обмен данными</td>
-                                    <td style={timeStyle}>{moment(appState.lastSyncroTime).format("DD MMM YYYY,  HH:mm")}</td>
-                                </tr>
+                                { (appState.legRegistration || []).map((regItem: ILegRegistration, index: number) => {
+                                    let pilot = appState.getPilot(regItem.pilotId);
+                                    return (
+                                        <tr>
+                                            <td style={{textAlign: "center"}}>{regItem.npp}</td>
+                                            <td>{pilot.name}</td>
+                                            <td>{pilot.autoName}</td>
+                                            <td style={{textAlign: "center"}}>{regItem.raceNumber}</td>
+                                        </tr>
+                                    );
+                                })}
                                 </tbody>
                             </table>
                         </div>

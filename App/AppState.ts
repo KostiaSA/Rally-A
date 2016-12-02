@@ -44,6 +44,11 @@ export class AppState {
         return this.encryptKey !== undefined;
     }
 
+    getPilot(pilotId: number): IPilot {
+        let ret: IPilot | undefined = (this.pilots || []).find((item: IPilot) => item.id === pilotId);
+        return ret || {id: 0, name: "?", engName: "?", autoName: "?"};
+    }
+
     loadTablesFromServer() {
         if (!this.getIsLogined())
             return;
@@ -111,7 +116,7 @@ export class AppState {
         let req: ILoadRallyPunktReq = {
             cmd: LOAD_RALLYPUNKT_CMD,
             dbts: this.rallyPunktDbts || "",
-            login:appState.login
+            login: appState.login
         };
 
         httpRequest<ILoadRallyPunktReq,ILoadRallyPunktAns>(req)
