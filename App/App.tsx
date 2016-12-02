@@ -45,8 +45,8 @@ export class App extends React.Component<any,any> {
 
 
         appState.cardPage = {
-            icon: "fa-id-card-o",
-            color: "olive",
+            icon: "fa-info-circle",
+            color: "royalblue",
             content:<CardPage></CardPage>
         }
         this.pages.push(appState.cardPage);

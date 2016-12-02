@@ -52,7 +52,10 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                     <div className="col-md-10 col-md-offset-1">
                         <div className="panel panel-default">
                             <div className="panel-heading">
-                                <h4 className="text-center">Актуальная информация</h4>
+                                <h4 className="text-center">
+                                    <i className={"fa fa-info-circle"} style={{fontSize:18, marginRight:10}}></i>
+                                    Информация о гонке
+                                </h4>
                             </div>
                             <table className="table">
                                 <tbody>
