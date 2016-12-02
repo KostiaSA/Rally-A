@@ -9,6 +9,7 @@ import {observer} from "mobx-react";
 import {CardPage} from "./pages/CardPage";
 import {FlagPage} from "./pages/FlagPage";
 import {CarsPage} from "./pages/CarsPage";
+import {vibratePushButton} from "./utils/vibrate";
 
 
 
@@ -127,7 +128,7 @@ export class App extends React.Component<any,any> {
                         {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number)=> {
 
                             let onclick = ()=> {
-                                console.log("cl1");
+                                vibratePushButton();
                                 appState.activePage = item;
                                 this.forceUpdate();
                             };

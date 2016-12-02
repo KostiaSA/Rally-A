@@ -7,6 +7,8 @@ import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
 import {ILegRegistration, IPilot} from "../api/api";
+import moment = require("moment");
+import {vibratePushButton, vibrate} from "../utils/vibrate";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -29,10 +31,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     componentDidMount() {
 
+        setInterval(() => {
+            $("#check-time").text(moment(new Date()).format("HH:mm:ss"));
+        }, 1000);
+
     };
 
     handleNumButtonClick = (num: string) => {
-        console.log(num);
+        vibratePushButton();
         if (num === "C")
             this.raceNumber = "";
         else if (num === "<") {
@@ -45,13 +51,19 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
         this.pilot = appState.getPilot(this.legRegistration.pilotId);
+
+        if (this.legRegistration.id >= 0)
+            vibrate(300);
+
     }
 
     handleCheckClick = () => {
+        vibratePushButton();
 
     }
 
     handleCheckWithTimeClick = () => {
+        vibratePushButton();
 
     }
 
@@ -98,7 +110,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         }
 
 
-        let checkEnabledClass = "disabled";
+        let checkEnabledClass = "hidden";
         if (this.legRegistration.id >= 0)
             checkEnabledClass = "";
 
@@ -201,14 +213,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                 </div>
                 <div className="row">
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
-                        <button className={"btn btn-lg btn-primary "+checkEnabledClass}
+                        <button className={"btn btn-lg btn-success "+checkEnabledClass}
                                 style={okButtonStyle}
                                 onClick={this.handleCheckClick}>
                             check
                         </button>
-                        <button className={"btn btn-lg btn-primary "+checkEnabledClass} style={okButtonStyle}
+                        <button className={"btn btn-lg btn-success "+checkEnabledClass} style={okButtonStyle}
                                 onClick={this.handleCheckWithTimeClick}>
-                            check 12:01:02
+                            check <span id="check-time"></span>
                         </button>
                     </div>
                 </div>
