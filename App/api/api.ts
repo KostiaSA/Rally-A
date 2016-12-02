@@ -150,3 +150,17 @@ export interface ILoadLegRegistrationAns extends IAns {
     legRegistration?: ILegRegistration[];
     dbts?: string;
 }
+
+// -------  CheckPoint ----------
+export interface ICheckPoint {
+    legRegId: number;
+    rallyPunktId: number;
+    checkTime: Date;
+    penaltyTime: Date;
+
+    mobileId: string;
+    mobileTime:Date;
+    mobileLogin:string;
+    mobileDevice:string;
+    syncOk:boolean;
+}
