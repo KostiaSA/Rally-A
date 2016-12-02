@@ -78,7 +78,6 @@ export interface IPilot {
     name: string;
     engName: string;
     autoName: string;
-    raceNumber: string;
 }
 
 export const LOAD_PILOTS_CMD = "4";
@@ -132,3 +131,22 @@ export interface ILoadRallyPunktAns extends IAns {
     dbts?: string;
 }
 
+// -------  LegRegistration ----------
+export interface ILegRegistration {
+    id: number;
+    pilotId: number;
+    raceNumber: string;
+    npp: number;
+    startTime: Date;
+}
+
+export const LOAD_LEGREGISTRATION_CMD = "7";
+
+export interface ILoadLegRegistrationReq extends IReq {
+    dbts: string;
+}
+
+export interface ILoadLegRegistrationAns extends IAns {
+    legRegistration?: ILegRegistration[];
+    dbts?: string;
+}

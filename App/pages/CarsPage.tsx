@@ -11,12 +11,12 @@ import moment = require("moment");
 
 //import  NotifyResize = require("react-notify-resize");
 
-export interface ICardPageProps {
+export interface ICarsPageProps {
 
 }
 
 @observer
-export class CardPage extends React.Component<ICardPageProps,any> {
+export class CarsPage extends React.Component<ICarsPageProps,any> {
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
@@ -29,7 +29,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
 
 
     render(): any {
-        console.log("render Card page");
+        console.log("render Cars page");
 
         let gonkaStyle: CSSProperties = {
             color: "olive",
@@ -52,7 +52,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                     <div className="col-md-10 col-md-offset-1">
                         <div className="panel panel-default">
                             <div className="panel-heading">
-                                <h4 className="text-center">Актуальная информация</h4>
+                                <h4 className="text-center">Участники</h4>
                             </div>
                             <table className="table">
                                 <tbody>

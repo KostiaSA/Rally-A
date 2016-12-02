@@ -8,6 +8,7 @@ import {appState} from "./AppState";
 import {observer} from "mobx-react";
 import {CardPage} from "./pages/CardPage";
 import {FlagPage} from "./pages/FlagPage";
+import {CarsPage} from "./pages/CarsPage";
 
 
 
@@ -60,7 +61,7 @@ export class App extends React.Component<any,any> {
         let carPage: IAppPage = {
             icon: "fa-car",
             color: "coral",
-            content:<div>car</div>
+            content:<CarsPage></CarsPage>
         }
         this.pages.push(carPage);
 

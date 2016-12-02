@@ -55,7 +55,9 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         <div className="panel panel-default">
                             <div className="panel-heading">
 
-                                <h4 className="text-center" style={{marginTop:5, marginBottom:5}}><i className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>Checkpoint</h4>
+                                <h4 className="text-center" style={{marginTop:5, marginBottom:5}}><i className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
+                                    {appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name+"  ("+appState.rallyPunkt.length+" км)" : ""}
+                                </h4>
                             </div>
                         </div>
                     </div>

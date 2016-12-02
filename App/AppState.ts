@@ -3,7 +3,8 @@ import {IAppPage} from "./App";
 import {
     IRallyHeader, IPilot, ILoadRallyHeaderReq, LOAD_RALLYHEADER_CMD, ILoadRallyHeaderAns,
     IRallyLeg, ILoadRallyLegReq, LOAD_RALLYLEG_CMD, ILoadRallyLegAns, IRallyPunkt, ILoadRallyPunktReq,
-    LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns
+    LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns, ILegRegistration, ILoadLegRegistrationReq, LOAD_LEGREGISTRATION_CMD,
+    ILoadLegRegistrationAns, ILoadPilotsReq, LOAD_PILOTS_CMD, ILoadPilotsAns
 } from "./api/api";
 import {httpRequest} from "./utils/httpRequest";
 
@@ -30,11 +31,14 @@ export class AppState {
     pilotsDbts?: string;
     rallyLegDbts?: string;
     rallyPunktDbts?: string;
+    legRegistrationDbts?: string;
+
 
     @observable rallyHeader?: IRallyHeader;
     @observable pilots?: IPilot[];
     @observable rallyLeg?: IRallyLeg;
     @observable rallyPunkt?: IRallyPunkt;
+    @observable legRegistration?: ILegRegistration[];
 
     getIsLogined() {
         return this.encryptKey !== undefined;
@@ -47,6 +51,8 @@ export class AppState {
         this.load_RallyHeader_FromServer();
         this.load_RallyLeg_FromServer();
         this.load_RallyPunkt_FromServer();
+        this.load_LegRegistration_FromServer();
+        this.load_Pilots_FromServer();
 
     }
 
@@ -125,6 +131,54 @@ export class AppState {
 
     }
 
+    load_LegRegistration_FromServer() {
+
+        let req: ILoadLegRegistrationReq = {
+            cmd: LOAD_LEGREGISTRATION_CMD,
+            dbts: this.legRegistrationDbts || ""
+        };
+
+        httpRequest<ILoadLegRegistrationReq,ILoadLegRegistrationAns>(req)
+            .then((ans: ILoadLegRegistrationAns) => {
+                if (ans.legRegistration) {
+                    this.legRegistrationDbts = ans.dbts;
+                    this.legRegistration = ans.legRegistration;
+                    window.localStorage.setItem("legRegistrationDbts", ans.dbts!);
+                    window.localStorage.setItem("legRegistration", JSON.stringify(ans.legRegistration));
+                }
+                this.lastSyncroTime = new Date();
+            })
+            .catch((err: any) => {
+                console.error(err);
+            });
+
+
+    }
+
+    load_Pilots_FromServer() {
+
+        let req: ILoadPilotsReq = {
+            cmd: LOAD_PILOTS_CMD,
+            dbts: this.pilotsDbts || ""
+        };
+
+        httpRequest<ILoadPilotsReq,ILoadPilotsAns>(req)
+            .then((ans: ILoadPilotsAns) => {
+                if (ans.pilots) {
+                    this.pilotsDbts = ans.dbts;
+                    this.pilots = ans.pilots;
+                    window.localStorage.setItem("pilotsDbts", ans.dbts!);
+                    window.localStorage.setItem("pilots", JSON.stringify(ans.pilots));
+                }
+                this.lastSyncroTime = new Date();
+            })
+            .catch((err: any) => {
+                console.error(err);
+            });
+
+
+    }
+
     loadTablesFromLocalStore() {
         //console.error("local-store0", appState.rallyHeader);
 
@@ -146,7 +200,17 @@ export class AppState {
             appState.rallyPunktDbts = window.localStorage.getItem("rallyPunktDbts") || undefined;
         }
 
-        console.error("local-store1", JSON.parse(window.localStorage.getItem("rallyPunkt")!));
+        if (window.localStorage.getItem("legRegistration")) {
+            appState.legRegistration = JSON.parse(window.localStorage.getItem("legRegistration")!) as ILegRegistration[];
+            appState.legRegistrationDbts = window.localStorage.getItem("legRegistrationDbts") || undefined;
+        }
+
+        if (window.localStorage.getItem("pilots")) {
+            appState.pilots = JSON.parse(window.localStorage.getItem("pilots")!) as IPilot[];
+            appState.pilotsDbts = window.localStorage.getItem("pilotsDbts") || undefined;
+        }
+
+        console.error("local-store1", JSON.parse(window.localStorage.getItem("pilots")!) as IPilot[]);
 
     }
 
