@@ -153,7 +153,7 @@ export interface ILoadLegRegistrationAns extends IAns {
 
 // -------  CheckPoint ----------
 export interface ICheckPoint {
-    legRegId: number;
+    legRegsId: number;
     rallyPunktId: number;
     checkTime: Date;
     penaltyTime: Date;
@@ -163,4 +163,26 @@ export interface ICheckPoint {
     mobileLogin:string;
     mobileDevice:string;
     syncOk:boolean;
+}
+
+export const LOAD_CHECKPOINTS_CMD = "8";
+
+export interface ILoadCheckPointsReq extends IReq {
+    rallyPunktId: number;
+    dbts: string;
+}
+
+export interface ILoadCheckPointsAns extends IAns {
+    checkPoints?: ICheckPoint[];
+    dbts?: string;
+}
+
+export const SAVE_CHECKPOINTS_CMD = "9";
+
+export interface ISaveCheckPointsReq extends IReq {
+    checkPoints?: ICheckPoint[];
+}
+
+export interface ISaveCheckPointsAns extends IAns {
+
 }

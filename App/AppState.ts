@@ -4,7 +4,8 @@ import {
     IRallyHeader, IPilot, ILoadRallyHeaderReq, LOAD_RALLYHEADER_CMD, ILoadRallyHeaderAns,
     IRallyLeg, ILoadRallyLegReq, LOAD_RALLYLEG_CMD, ILoadRallyLegAns, IRallyPunkt, ILoadRallyPunktReq,
     LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns, ILegRegistration, ILoadLegRegistrationReq, LOAD_LEGREGISTRATION_CMD,
-    ILoadLegRegistrationAns, ILoadPilotsReq, LOAD_PILOTS_CMD, ILoadPilotsAns
+    ILoadLegRegistrationAns, ILoadPilotsReq, LOAD_PILOTS_CMD, ILoadPilotsAns, LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
+    ILoadCheckPointsAns, ICheckPoint
 } from "./api/api";
 import {httpRequest} from "./utils/httpRequest";
 
@@ -32,13 +33,15 @@ export class AppState {
     rallyLegDbts?: string;
     rallyPunktDbts?: string;
     legRegistrationDbts?: string;
+    checkPointsDbts?: string;
 
 
     @observable rallyHeader?: IRallyHeader;
-    @observable pilots?: IPilot[];
+    @observable pilots: IPilot[] = [];
     @observable rallyLeg?: IRallyLeg;
     @observable rallyPunkt?: IRallyPunkt;
-    @observable legRegistration?: ILegRegistration[];
+    @observable legRegistration: ILegRegistration[] = [];
+    @observable checkPoints: ICheckPoint[] = [];
 
     getIsLogined() {
         return this.encryptKey !== undefined;
@@ -54,6 +57,10 @@ export class AppState {
         return ret || {id: -1, pilotId: -1, raceNumber: "", npp: -1, startTime: new Date()};
     }
 
+    getCheckPointByRallyPunktAndLegRegsId(punktId: number, legRegsId: number): ICheckPoint | undefined {
+        return (this.checkPoints || []).find((item: ICheckPoint) => item.rallyPunktId === punktId && item.legRegsId === legRegsId);
+    }
+
     loadTablesFromServer() {
         if (!this.getIsLogined())
             return;
@@ -63,6 +70,7 @@ export class AppState {
         this.load_RallyPunkt_FromServer();
         this.load_LegRegistration_FromServer();
         this.load_Pilots_FromServer();
+        this.load_CheckPoints_FromServer();
 
     }
 
@@ -189,6 +197,57 @@ export class AppState {
 
     }
 
+    load_CheckPoints_FromServer() {
+
+        if (this.rallyPunkt && this.rallyLeg) {
+
+            let req: ILoadCheckPointsReq = {
+                cmd: LOAD_CHECKPOINTS_CMD,
+                rallyPunktId: this.rallyPunkt.id,
+                dbts: this.checkPointsDbts || ""
+            };
+
+            // удаляем все со старых RallyPukt
+            let currPunkId = this.rallyPunkt.id;
+            this.checkPoints = this.checkPoints.filter((item: ICheckPoint) => {
+                return item.rallyPunktId === currPunkId || item.syncOk !== true
+            });
+
+            httpRequest<ILoadCheckPointsReq,ILoadCheckPointsAns>(req)
+                .then((ans: ILoadCheckPointsAns) => {
+                    if (ans.checkPoints) {
+
+                        let needSaveToLocalStorage = false;
+
+                        ans.checkPoints.forEach((item: ICheckPoint, index: number) => {
+                            let oldItem: ICheckPoint | undefined = this.getCheckPointByRallyPunktAndLegRegsId(item.rallyPunktId, item.legRegsId);
+                            if (oldItem) {
+                                if (oldItem.syncOk === true && JSON.stringify(oldItem) !== JSON.stringify(item)) {
+                                    ans.checkPoints![index] = item;
+                                    needSaveToLocalStorage = true;
+                                }
+                            }
+                            else {
+                                this.checkPoints.push(item);
+                                needSaveToLocalStorage = true;
+                            }
+
+                        });
+
+                        this.checkPointsDbts = ans.dbts;
+                        window.localStorage.setItem("checkPointsDbts", ans.dbts!);
+                        if (needSaveToLocalStorage)
+                            window.localStorage.setItem("checkPoints", JSON.stringify(ans.checkPoints));
+                    }
+                    this.lastSyncroTime = new Date();
+                })
+                .catch((err: any) => {
+                    console.error(err);
+                });
+        }
+
+    }
+
     loadTablesFromLocalStore() {
         //console.error("local-store0", appState.rallyHeader);
 
@@ -220,7 +279,12 @@ export class AppState {
             appState.pilotsDbts = window.localStorage.getItem("pilotsDbts") || undefined;
         }
 
-        console.error("local-store1", JSON.parse(window.localStorage.getItem("pilots")!) as IPilot[]);
+        if (window.localStorage.getItem("checkPoints")) {
+            appState.checkPoints = JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[];
+            appState.checkPointsDbts = window.localStorage.getItem("checkPointsDbts") || undefined;
+        }
+
+        console.error("local-store1", JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[]);
 
     }
 
