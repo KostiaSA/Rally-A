@@ -64,7 +64,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                         appState.loadTablesFromLocalStore();
                         appState.loadTablesFromServer();
                         appState.activePage = appState.cardPage;
-                        appState.startSyncronozation();
+                        appState.startSyncronization();
                     })
                     .catch((err: any) => {
                         this.httpRequestRunning = false;

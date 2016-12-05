@@ -56,9 +56,9 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
 
         if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
-            vibrate(300);
-        else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
             vibrate([70, 70, 70, 70, 70]);
+        else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
+            vibrate(300);
 
     }
 
@@ -69,6 +69,8 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     handleCheckWithTimeClick = () => {
         vibratePushButton();
+        appState.pushNewCheck(this.legRegistration.id, new Date());
+        this.handleNumButtonClick("C");
 
     }
 
@@ -125,8 +127,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         if (this.legRegistration.id >= 0 && this.checkpoint === undefined) {
             checkEnabledClass = "";
         }
-        else
-        if (this.legRegistration.id >= 0 && this.checkpoint !== undefined) {
+        else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined) {
             updateEnabledClass = "";
         }
 

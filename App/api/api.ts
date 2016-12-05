@@ -180,7 +180,7 @@ export interface ILoadCheckPointsAns extends IAns {
 export const SAVE_CHECKPOINTS_CMD = "9";
 
 export interface ISaveCheckPointsReq extends IReq {
-    checkPoints?: ICheckPoint[];
+    checkPoints: ICheckPoint[];
 }
 
 export interface ISaveCheckPointsAns extends IAns {

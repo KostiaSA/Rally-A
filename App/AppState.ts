@@ -5,9 +5,12 @@ import {
     IRallyLeg, ILoadRallyLegReq, LOAD_RALLYLEG_CMD, ILoadRallyLegAns, IRallyPunkt, ILoadRallyPunktReq,
     LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns, ILegRegistration, ILoadLegRegistrationReq, LOAD_LEGREGISTRATION_CMD,
     ILoadLegRegistrationAns, ILoadPilotsReq, LOAD_PILOTS_CMD, ILoadPilotsAns, LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
-    ILoadCheckPointsAns, ICheckPoint
+    ILoadCheckPointsAns, ICheckPoint, ISaveCheckPointsReq, ISaveCheckPointsAns
 } from "./api/api";
 import {httpRequest} from "./utils/httpRequest";
+import {getRandomString} from "./utils/getRandomString";
+import {showToast} from "./utils/showToast";
+import moment = require("moment");
 
 export class AppState {
     @observable sessionId: string;
@@ -61,9 +64,32 @@ export class AppState {
         return (this.checkPoints || []).find((item: ICheckPoint) => item.rallyPunktId === punktId && item.legRegsId === legRegsId);
     }
 
+    getCheckPointByMobileId(mobileId: string): ICheckPoint | undefined {
+        return (this.checkPoints || []).find((item: ICheckPoint) => item.mobileId === mobileId);
+    }
+
     // getCheckPointByRallyPunktAndLegRegsId(punktId: number, legRegsId: number): ICheckPoint | undefined {
     //     return (this.checkPoints || []).find((item: ICheckPoint) => item.rallyPunktId === punktId && item.legRegsId === legRegsId);
     // }
+
+    pushNewCheck(legRegsId: number, time: Date) {
+
+        let check: ICheckPoint = {
+            legRegsId: legRegsId,
+            rallyPunktId: this.rallyPunkt!.id,
+            checkTime: time,
+            penaltyTime: new Date(1990, 1, 1),
+
+            mobileId: getRandomString(),
+            mobileTime: new Date(),
+            mobileLogin: this.login,
+            mobileDevice: platform.description!,
+            syncOk: false
+        };
+
+        this.checkPoints.push(check);
+        showToast("сохранен check " + moment(time).format("HH:mm:ss"));
+    }
 
     loadTablesFromServer() {
         if (!this.getIsLogined())
@@ -74,7 +100,12 @@ export class AppState {
         this.load_RallyPunkt_FromServer();
         this.load_LegRegistration_FromServer();
         this.load_Pilots_FromServer();
-        this.load_CheckPoints_FromServer();
+
+        this.save_CheckPoints_ToServer();
+
+        setTimeout(() => {
+            this.load_CheckPoints_FromServer();
+        }, 3000);
 
     }
 
@@ -220,27 +251,28 @@ export class AppState {
                 dbts: this.checkPointsDbts || ""
             };
 
-            // удаляем все со старых RallyPukt
             let currPunkId = this.rallyPunkt.id;
-            this.checkPoints = this.checkPoints.filter((item: ICheckPoint) => {
-                return item.rallyPunktId === currPunkId || item.syncOk !== true
-            });
 
             httpRequest<ILoadCheckPointsReq,ILoadCheckPointsAns>(req)
                 .then((ans: ILoadCheckPointsAns) => {
                     if (ans.checkPoints) {
 
+                        // удаляем все со старых RallyPukt
+                        this.checkPoints = this.checkPoints.filter((item: ICheckPoint) => {
+                            return item.rallyPunktId === currPunkId || item.syncOk !== true
+                        });
+
                         let needSaveToLocalStorage = false;
 
                         ans.checkPoints.forEach((item: ICheckPoint, index: number) => {
 
-                            item.checkTime=new Date(item.checkTime);
-                            item.penaltyTime=new Date(item.penaltyTime);
+                            item.checkTime = new Date(item.checkTime);
+                            item.penaltyTime = new Date(item.penaltyTime);
 
                             let oldItem: ICheckPoint | undefined = this.getCheckPointByRallyPunktAndLegRegsId(item.rallyPunktId, item.legRegsId);
                             if (oldItem) {
                                 if (oldItem.syncOk === true && JSON.stringify(oldItem) !== JSON.stringify(item)) {
-                                    ans.checkPoints![index] = item;
+                                    this.checkPoints![index] = item;
                                     needSaveToLocalStorage = true;
                                 }
                             }
@@ -305,7 +337,39 @@ export class AppState {
 
     }
 
-    startSyncronozation() {
+
+    save_CheckPoints_ToServer() {
+
+        let req: ISaveCheckPointsReq = {
+            cmd: LOAD_CHECKPOINTS_CMD,
+            checkPoints: this.checkPoints.filter((item: ICheckPoint) => !item.syncOk)
+        };
+
+        if (req.checkPoints.length > 0) {
+
+
+            httpRequest<ISaveCheckPointsReq,ISaveCheckPointsAns>(req)
+                .then((ans: ISaveCheckPointsAns) => {
+
+                    req.checkPoints.forEach((item: ICheckPoint) => {
+                        let cp = this.getCheckPointByMobileId(item.mobileId);
+                        if (cp)
+                            cp.syncOk = true;
+                        else
+                            alert("internal error syncOk");
+                    });
+
+                    this.lastSyncroTime = new Date();
+
+                })
+                .catch((err: any) => {
+                    console.error(err);
+                });
+        }
+
+    }
+
+    startSyncronization() {
         setInterval(() => {
             this.loadTablesFromServer();
         }, 10000);
