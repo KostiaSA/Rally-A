@@ -63,19 +63,48 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                 <tr>
                                     <th style={{textAlign: "center"}}>старт.N</th>
                                     <th>пилот</th>
-                                    <th>авто</th>
                                     <th style={{textAlign: "center"}}>номер</th>
+                                    <th style={{textAlign: "center"}}>check</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 { (appState.legRegistration || []).map((regItem: ILegRegistration, index: number) => {
                                     let pilot = appState.getPilot(regItem.pilotId);
+                                    let checkTime = "";
+                                    let checkTimeColor = "green";
+                                    let penaTime = "";
+                                    if (appState.rallyPunkt) {
+                                        let cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt.id, regItem.id);
+                                        if (cp) {
+                                            checkTime = moment(cp.checkTime).format("HH:mm:ss");
+                                            if (cp.penaltyTime && (cp.penaltyTime.getHours() > 0 || cp.penaltyTime.getMinutes() || cp.penaltyTime.getSeconds() > 0)) {
+                                                penaTime = "+ ";
+                                                if (cp.penaltyTime.getHours() > 0)
+                                                    penaTime += cp.penaltyTime.getHours() + " час ";
+                                                if (cp.penaltyTime.getMinutes() > 0)
+                                                    penaTime += cp.penaltyTime.getMinutes() + " мин ";
+                                                if (cp.penaltyTime.getSeconds() > 0)
+                                                    penaTime += cp.penaltyTime.getSeconds() + " сек ";
+
+                                            }
+                                            if (cp.syncOk!==true)
+                                                checkTimeColor="coral";
+                                        }
+                                    }
                                     return (
                                         <tr key={index}>
                                             <td style={{textAlign: "center"}}>{regItem.npp}</td>
-                                            <td>{pilot.name}</td>
-                                            <td style={{color: "coral"}}>{pilot.autoName}</td>
-                                            <td style={{textAlign: "center", color: "teal", fontWeight:"bold"}}>{regItem.raceNumber}</td>
+                                            <td>
+                                                <span style={{color: "coral"}}>{pilot.autoName}</span>
+                                                <br/>
+                                                <span>{pilot.name}</span>
+                                            </td>
+                                            <td style={{textAlign: "center", color: "teal"}}>{regItem.raceNumber}</td>
+                                            <td style={{textAlign: "center"}}>
+                                                <span style={{color: checkTimeColor}}>{checkTime}</span>
+                                                <br/>
+                                                <span style={{color: "red"}}>{penaTime}</span>
+                                            </td>
                                         </tr>
                                     );
                                 })}

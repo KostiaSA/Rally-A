@@ -6,7 +6,7 @@ import {httpRequest} from "../utils/httpRequest";
 import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
-import {ILegRegistration, IPilot} from "../api/api";
+import {ILegRegistration, IPilot, ICheckPoint} from "../api/api";
 import moment = require("moment");
 import {vibratePushButton, vibrate} from "../utils/vibrate";
 
@@ -28,6 +28,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
     @observable raceNumber: string = "";
     @observable legRegistration: ILegRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
     @observable pilot: IPilot = appState.getPilot(this.legRegistration.pilotId);
+    @observable checkpoint: ICheckPoint | undefined;
 
     componentDidMount() {
 
@@ -51,9 +52,13 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
         this.pilot = appState.getPilot(this.legRegistration.pilotId);
+        this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
 
-        if (this.legRegistration.id >= 0)
+
+        if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
             vibrate(300);
+        else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
+            vibrate([70, 70, 70, 70, 70]);
 
     }
 
@@ -63,6 +68,11 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
     }
 
     handleCheckWithTimeClick = () => {
+        vibratePushButton();
+
+    }
+
+    handleUpdateClick = () => {
         vibratePushButton();
 
     }
@@ -111,8 +121,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
 
         let checkEnabledClass = "hidden";
-        if (this.legRegistration.id >= 0)
+        let updateEnabledClass = "hidden";
+        if (this.legRegistration.id >= 0 && this.checkpoint === undefined) {
             checkEnabledClass = "";
+        }
+        else
+        if (this.legRegistration.id >= 0 && this.checkpoint !== undefined) {
+            updateEnabledClass = "";
+        }
 
         return (
             <div className="container">
@@ -148,6 +164,9 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                                 <td style={{padding:5}}>
                                     <span style={{color:"coral"}}>{this.pilot.autoName + "  "}</span>
                                     <span>{this.pilot.name}</span>
+                                    <div style={{ color:"green"}}>
+                                        { this.checkpoint ? "check: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
+                                    </div>
                                 </td>
                             </tr>
                         </table>
@@ -221,6 +240,13 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         <button className={"btn btn-lg btn-success "+checkEnabledClass} style={okButtonStyle}
                                 onClick={this.handleCheckWithTimeClick}>
                             check <span id="check-time"></span>
+                        </button>
+                    </div>
+                    <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
+                        <button className={"btn btn-lg btn-primary "+updateEnabledClass}
+                                style={okButtonStyle}
+                                onClick={this.handleUpdateClick}>
+                            исправить время
                         </button>
                     </div>
                 </div>

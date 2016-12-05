@@ -61,6 +61,10 @@ export class AppState {
         return (this.checkPoints || []).find((item: ICheckPoint) => item.rallyPunktId === punktId && item.legRegsId === legRegsId);
     }
 
+    // getCheckPointByRallyPunktAndLegRegsId(punktId: number, legRegsId: number): ICheckPoint | undefined {
+    //     return (this.checkPoints || []).find((item: ICheckPoint) => item.rallyPunktId === punktId && item.legRegsId === legRegsId);
+    // }
+
     loadTablesFromServer() {
         if (!this.getIsLogined())
             return;
@@ -88,6 +92,8 @@ export class AppState {
                 if (ans.rallyHeader) {
                     this.rallyHeaderDbts = ans.dbts;
                     this.rallyHeader = ans.rallyHeader;
+                    this.rallyHeader.begDate = new Date(this.rallyHeader.begDate);
+                    this.rallyHeader.endDate = new Date(this.rallyHeader.endDate);
                     window.localStorage.setItem("rallyHeaderDbts", ans.dbts!);
                     window.localStorage.setItem("rallyHeader", JSON.stringify(ans.rallyHeader));
                 }
@@ -112,6 +118,8 @@ export class AppState {
                 if (ans.rallyLeg) {
                     this.rallyLegDbts = ans.dbts;
                     this.rallyLeg = ans.rallyLeg;
+                    this.rallyLeg.date = new Date(this.rallyLeg.date);
+
                     window.localStorage.setItem("rallyLegDbts", ans.dbts!);
                     window.localStorage.setItem("rallyLeg", JSON.stringify(ans.rallyLeg));
                 }
@@ -161,6 +169,11 @@ export class AppState {
                 if (ans.legRegistration) {
                     this.legRegistrationDbts = ans.dbts;
                     this.legRegistration = ans.legRegistration;
+
+                    this.legRegistration.forEach((item: ILegRegistration) => {
+                        item.startTime = new Date(item.startTime);
+                    });
+
                     window.localStorage.setItem("legRegistrationDbts", ans.dbts!);
                     window.localStorage.setItem("legRegistration", JSON.stringify(ans.legRegistration));
                 }
@@ -220,6 +233,10 @@ export class AppState {
                         let needSaveToLocalStorage = false;
 
                         ans.checkPoints.forEach((item: ICheckPoint, index: number) => {
+
+                            item.checkTime=new Date(item.checkTime);
+                            item.penaltyTime=new Date(item.penaltyTime);
+
                             let oldItem: ICheckPoint | undefined = this.getCheckPointByRallyPunktAndLegRegsId(item.rallyPunktId, item.legRegsId);
                             if (oldItem) {
                                 if (oldItem.syncOk === true && JSON.stringify(oldItem) !== JSON.stringify(item)) {
@@ -291,7 +308,7 @@ export class AppState {
     startSyncronozation() {
         setInterval(() => {
             this.loadTablesFromServer();
-        }, 30000);
+        }, 10000);
     }
 }
 
