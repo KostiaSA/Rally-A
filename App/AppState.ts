@@ -5,7 +5,7 @@ import {
     IRallyLeg, ILoadRallyLegReq, LOAD_RALLYLEG_CMD, ILoadRallyLegAns, IRallyPunkt, ILoadRallyPunktReq,
     LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns, ILegRegistration, ILoadLegRegistrationReq, LOAD_LEGREGISTRATION_CMD,
     ILoadLegRegistrationAns, ILoadPilotsReq, LOAD_PILOTS_CMD, ILoadPilotsAns, LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
-    ILoadCheckPointsAns, ICheckPoint, ISaveCheckPointsReq, ISaveCheckPointsAns
+    ILoadCheckPointsAns, ICheckPoint, ISaveCheckPointsReq, ISaveCheckPointsAns, SAVE_CHECKPOINTS_CMD
 } from "./api/api";
 import {httpRequest} from "./utils/httpRequest";
 import {getRandomString} from "./utils/getRandomString";
@@ -100,8 +100,6 @@ export class AppState {
         this.load_RallyPunkt_FromServer();
         this.load_LegRegistration_FromServer();
         this.load_Pilots_FromServer();
-
-        this.save_CheckPoints_ToServer();
 
         setTimeout(() => {
             this.load_CheckPoints_FromServer();
@@ -341,7 +339,7 @@ export class AppState {
     save_CheckPoints_ToServer() {
 
         let req: ISaveCheckPointsReq = {
-            cmd: LOAD_CHECKPOINTS_CMD,
+            cmd: SAVE_CHECKPOINTS_CMD,
             checkPoints: this.checkPoints.filter((item: ICheckPoint) => !item.syncOk)
         };
 
@@ -372,7 +370,11 @@ export class AppState {
     startSyncronization() {
         setInterval(() => {
             this.loadTablesFromServer();
-        }, 10000);
+        }, 60000);
+
+        setInterval(() => {
+            this.save_CheckPoints_ToServer();
+        }, 5000);
     }
 }
 
