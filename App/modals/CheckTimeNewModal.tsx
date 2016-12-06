@@ -89,7 +89,7 @@ export class CheckTimeNewModal extends React.Component<ICheckTimeNewModalProps,a
                     <button
                         type="button"
                         data-dismiss="modal"
-                        className="btn btn-primary"
+                        className="btn btn-success"
                         onClick={()=>{
                             vibratePushButton();
                             this.props.checkpoint.checkTime=new Date(moment(this.props.checkpoint.checkTime).format("YYYY-MM-DD")+" "+$(this.checkTimeNative).val());
