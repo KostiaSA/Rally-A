@@ -72,8 +72,8 @@ export class CheckTimeUpdateModal extends React.Component<ICheckTimeUpdateModalP
                         <div className="form-group">
                             <div className="input-group">
                                 <span className="input-group-addon">
+                                    <span className="fa fa-flag-checkered" style={{marginRight:5}}></span>
                                     <span>время</span>
-                                    <span className="fa fa-flag-checkered"></span>
                                 </span>
                                 <input type="time" step="1"
                                        className="form-control"
@@ -94,7 +94,7 @@ export class CheckTimeUpdateModal extends React.Component<ICheckTimeUpdateModalP
                             vibratePushButton();
                             this.props.checkpoint.checkTime=new Date(moment(this.props.checkpoint.checkTime).format("YYYY-MM-DD")+" "+$(this.checkTimeNative).val());
                             this.props.checkpoint.syncOk=false;
-                            showToast("исправлено время на " + $(this.checkTimeNative).val());
+                            showToast("записано " + $(this.checkTimeNative).val());
                         }}
                     >
                         Сохранить

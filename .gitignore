@@ -13,4 +13,4 @@ app_bundle.js
 !webpack.config.js
 !www/js/*.js
 *.pdf
-
+!component-patches/react-notify-toast/bin/notify.js

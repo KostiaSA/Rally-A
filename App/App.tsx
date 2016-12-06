@@ -10,7 +10,7 @@ import {CardPage} from "./pages/CardPage";
 import {FlagPage} from "./pages/FlagPage";
 import {CarsPage} from "./pages/CarsPage";
 import {vibratePushButton} from "./utils/vibrate";
-
+import Notifications, {notify} from "react-notify-toast";
 
 
 export interface IAppPage {
@@ -99,7 +99,7 @@ export class App extends React.Component<any,any> {
     }
 
     componentDidMount() {
-        window.addEventListener("resize", ()=> {
+        window.addEventListener("resize", () => {
             appState.winWidth = $(window).width();
             appState.winHeight = $(window).height();
             this.forceUpdate();
@@ -116,8 +116,9 @@ export class App extends React.Component<any,any> {
 
         return (
             <div>
+                <Notifications />
                 <div className="content">
-                    {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number)=> {
+                    {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number) => {
                         return (
                             <div key={index} className={item!==appState.activePage?"hidden":""}>{item.content}</div>
                         )
@@ -125,9 +126,9 @@ export class App extends React.Component<any,any> {
                 </div>
                 <nav className={"navbar navbar-default navbar-fixed-bottom "+navBarHiddenClass}>
                     <div className="btn-group" role="group" style={{padding:5, textAlign:"center"}}>
-                        {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number)=> {
+                        {this.pages.map<React.ReactElement<any>>((item: IAppPage, index: number) => {
 
-                            let onclick = ()=> {
+                            let onclick = () => {
                                 vibratePushButton();
                                 appState.activePage = item;
                                 this.forceUpdate();

@@ -6,6 +6,7 @@ import {getIsCordovaApp} from "./utils/getIsCordovaApp";
 import {appState} from "./AppState";
 import {getRandomString} from "./utils/getRandomString";
 import moment = require("moment");
+import Notifications, {notify} from "react-notify-toast";
 //import  {RouteHandler} from "react-router";
 //import  {DefaultRoute} from "react-router";
 //import  {Router, Route, DefaultRoute, RouteHandler, Link, NotFoundRoute} from "react-router";

@@ -88,7 +88,7 @@ export class AppState {
         };
 
         this.checkPoints.push(check);
-        showToast("сохранен check " + moment(time).format("HH:mm:ss"));
+        showToast("записано " + moment(time).format("HH:mm:ss"));
     }
 
     loadTablesFromServer() {

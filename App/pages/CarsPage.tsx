@@ -31,6 +31,13 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
 
     };
 
+    getTotalCount(): number {
+        return (appState.legRegistration || []).length;
+    }
+
+    getCheckedCount(): number {
+        return appState.checkPoints.length;
+    }
 
     render(): any {
         console.log("render Cars page");
@@ -50,6 +57,7 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
             fontWeight: "bold"
         };
 
+
         return (
             <div className="container">
                 <div className="row" style={{ marginTop:20 }}>
@@ -58,7 +66,7 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                             <div className="panel-heading">
                                 <h4 className="text-center">
                                     <i className={"fa fa-car"} style={{fontSize:16, marginRight:10}}/>
-                                    Участники этапа
+                                    Участники этапа ({this.getCheckedCount()}/{this.getTotalCount()})
                                 </h4>
                             </div>
                             <table className="table">
