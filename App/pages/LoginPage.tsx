@@ -12,6 +12,7 @@ import {getIsCordovaApp} from "../utils/getIsCordovaApp";
 import {showModal} from "../modals/showModal";
 import {AndroidDownloadModal} from "../modals/AndroidDownloadModal";
 import {config} from "../config/config";
+import {vibratePushButton} from "../utils/vibrate";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -35,6 +36,8 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     @observable httpRequestRunning: boolean;
 
     handleButtonClick = () => {
+        vibratePushButton();
+
         let timeIndex = setTimeout(() => {
             this.httpRequestRunning = true;
         }, 500);
@@ -86,6 +89,7 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
     };
 
     handleAndroidClick = () => {
+        vibratePushButton();
 
         if (platform.os && platform.os.family && platform.os.family.toLowerCase().indexOf("android") >= 0)
             window.location.href = config.apkUrl;

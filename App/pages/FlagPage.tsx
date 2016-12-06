@@ -9,6 +9,8 @@ import CSSProperties = React.CSSProperties;
 import {ILegRegistration, IPilot, ICheckPoint} from "../api/api";
 import moment = require("moment");
 import {vibratePushButton, vibrate} from "../utils/vibrate";
+import {showModal} from "../modals/showModal";
+import {CheckTimeUpdateModal} from "../modals/CheckTimeUpdateModal";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -76,6 +78,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     handleUpdateClick = () => {
         vibratePushButton();
+        showModal(<CheckTimeUpdateModal checkpoint={this.checkpoint!} onClose={()=>{}}/>);
 
     }
 
