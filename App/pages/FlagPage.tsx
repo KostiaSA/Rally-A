@@ -11,6 +11,7 @@ import moment = require("moment");
 import {vibratePushButton, vibrate} from "../utils/vibrate";
 import {showModal} from "../modals/showModal";
 import {CheckTimeUpdateModal} from "../modals/CheckTimeUpdateModal";
+import {CheckTimeNewModal} from "../modals/CheckTimeNewModal";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -66,14 +67,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     handleCheckClick = () => {
         vibratePushButton();
-
+        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, new Date())} onClose={()=>{}}/>);
+        this.handleNumButtonClick("C");
     }
 
     handleCheckWithTimeClick = () => {
         vibratePushButton();
         appState.pushNewCheck(this.legRegistration.id, new Date());
         this.handleNumButtonClick("C");
-
     }
 
     handleUpdateClick = () => {

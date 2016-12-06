@@ -29,7 +29,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
 
 
     render(): any {
-        console.log("render Card page");
+        //console.log("render Card page");
 
         let gonkaStyle: CSSProperties = {
             color: "olive",

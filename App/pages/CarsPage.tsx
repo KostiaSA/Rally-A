@@ -40,7 +40,7 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
     }
 
     render(): any {
-        console.log("render Cars page");
+        //console.log("render Cars page");
 
         let gonkaStyle: CSSProperties = {
             color: "olive",

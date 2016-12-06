@@ -74,6 +74,25 @@ export class AppState {
 
     pushNewCheck(legRegsId: number, time: Date) {
 
+        // let check: ICheckPoint = {
+        //     legRegsId: legRegsId,
+        //     rallyPunktId: this.rallyPunkt!.id,
+        //     checkTime: time,
+        //     penaltyTime: new Date(1990, 1, 1),
+        //
+        //     mobileId: getRandomString(),
+        //     mobileTime: new Date(),
+        //     mobileLogin: this.login,
+        //     mobileDevice: platform.description!,
+        //     syncOk: false
+        // };
+        //
+        this.checkPoints.push(this.getNewCheck(legRegsId,time));
+        showToast("записано " + moment(time).format("HH:mm:ss"));
+    }
+
+    getNewCheck(legRegsId: number, time: Date):ICheckPoint {
+
         let check: ICheckPoint = {
             legRegsId: legRegsId,
             rallyPunktId: this.rallyPunkt!.id,
@@ -87,8 +106,7 @@ export class AppState {
             syncOk: false
         };
 
-        this.checkPoints.push(check);
-        showToast("записано " + moment(time).format("HH:mm:ss"));
+        return check;
     }
 
     loadTablesFromServer() {
