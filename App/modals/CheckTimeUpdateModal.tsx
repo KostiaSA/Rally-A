@@ -17,6 +17,8 @@ import * as QRCodeReact from "qrcode.react";
 import {config} from "../config/config";
 import {replaceAll} from "../utils/replaceAll";
 import moment = require("moment");
+import {showToast} from "../utils/showToast";
+import {vibratePushButton} from "../utils/vibrate";
 
 let QRCode = QRCodeReact as any;
 
@@ -86,16 +88,23 @@ export class CheckTimeUpdateModal extends React.Component<ICheckTimeUpdateModalP
                 <div className="modal-footer">
                     <button
                         type="button"
+                        data-dismiss="modal"
                         className="btn btn-primary"
                         onClick={()=>{
-                            console.log("new date="+moment(this.props.checkpoint.checkTime).format("YYYY-MM-DD")+" "+$(this.checkTimeNative).val());
+                            vibratePushButton();
                             this.props.checkpoint.checkTime=new Date(moment(this.props.checkpoint.checkTime).format("YYYY-MM-DD")+" "+$(this.checkTimeNative).val());
                             this.props.checkpoint.syncOk=false;
+                            showToast("исправлено время на " + $(this.checkTimeNative).val());
                         }}
                     >
                         Сохранить
                     </button>
-                    <button type="button" className="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <button type="button" className="btn btn-default" data-dismiss="modal" onClick={()=>{
+                            vibratePushButton();
+                        }}
+                    >
+                        Отмена
+                    </button>
                 </div>
             </Modal>
         )

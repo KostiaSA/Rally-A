@@ -7,7 +7,10 @@ import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
 import moment = require("moment");
-import {ILegRegistration} from "../api/api";
+import {ILegRegistration, ICheckPoint} from "../api/api";
+import {CheckTimeUpdateModal} from "../modals/CheckTimeUpdateModal";
+import {showModal} from "../modals/showModal";
+import {vibratePushButton} from "../utils/vibrate";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -73,8 +76,9 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                     let checkTime = "";
                                     let checkTimeColor = "green";
                                     let penaTime = "";
+                                    let cp: ICheckPoint | undefined;
                                     if (appState.rallyPunkt) {
-                                        let cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt.id, regItem.id);
+                                        cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt.id, regItem.id);
                                         if (cp) {
                                             checkTime = moment(cp.checkTime).format("HH:mm:ss");
                                             if (cp.penaltyTime && (cp.penaltyTime.getHours() > 0 || cp.penaltyTime.getMinutes() || cp.penaltyTime.getSeconds() > 0)) {
@@ -87,8 +91,8 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                                     penaTime += cp.penaltyTime.getSeconds() + " сек ";
 
                                             }
-                                            if (cp.syncOk!==true)
-                                                checkTimeColor="coral";
+                                            if (cp.syncOk !== true)
+                                                checkTimeColor = "coral";
                                         }
                                     }
                                     return (
@@ -100,7 +104,14 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                                 <span>{pilot.name}</span>
                                             </td>
                                             <td style={{textAlign: "center", color: "teal"}}>{regItem.raceNumber}</td>
-                                            <td style={{textAlign: "center"}}>
+                                            <td style={{textAlign: "center"}}
+                                                onClick={()=>{
+                                                    if (cp){
+                                                      vibratePushButton();
+                                                      showModal(<CheckTimeUpdateModal checkpoint={cp} onClose={()=>{}}/>);
+                                                    }
+                                                }}
+                                            >
                                                 <span style={{color: checkTimeColor}}>{checkTime}</span>
                                                 <br/>
                                                 <span style={{color: "red"}}>{penaTime}</span>
