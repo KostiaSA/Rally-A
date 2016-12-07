@@ -5,9 +5,9 @@ export interface IConfig {
 }
 
 let developDir: IConfig = {
-    appName: "Северный Forest (Gamp)",
-    apiUrl: "http://192.168.0.14:3000/api",
-    apkUrl: "http://192.168.0.14:3000/downloads/r.apk",
+    appName: "Северный Forest",
+    apiUrl: "http://5.19.239.191:3000/api",
+    apkUrl: "http://5.19.239.191:3000/downloads/r.apk",
 }
 
 
