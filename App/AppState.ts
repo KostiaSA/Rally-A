@@ -282,6 +282,8 @@ export class AppState {
 
                         ans.checkPoints.forEach((item: ICheckPoint, index: number) => {
 
+                            console.log("new Date(item.checkTime)",item.checkTime);
+
                             item.checkTime = new Date(item.checkTime);
                             item.penaltyTime = new Date(item.penaltyTime);
 

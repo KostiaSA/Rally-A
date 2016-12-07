@@ -37,7 +37,7 @@ export class CheckTimeUpdateModal extends React.Component<ICheckTimeUpdateModalP
         this.context = context;
 
         let time = this.props.checkpoint.checkTime;
-        this.timeNum = time.getHours() * 10000 + time.getMinutes() * 100 + time.getSeconds();
+      //  this.timeNum = time.getHours() * 10000 + time.getMinutes() * 100 + time.getSeconds();
     }
 
     // componentDidMount() {
@@ -45,7 +45,7 @@ export class CheckTimeUpdateModal extends React.Component<ICheckTimeUpdateModalP
     //     //$(this.getDOMNode()).on('hidden.bs.modal', this.props.handleHideModal);
     // };
 
-    @observable timeNum: number;
+  //  @observable timeNum: number;
 
     getTimeAsStr(timeNum: number): string {
         let str = this.pad(timeNum, 6);
@@ -92,7 +92,7 @@ export class CheckTimeUpdateModal extends React.Component<ICheckTimeUpdateModalP
                         className="btn btn-primary"
                         onClick={()=>{
                             vibratePushButton();
-                            this.props.checkpoint.checkTime=new Date(moment(this.props.checkpoint.checkTime).format("YYYY-MM-DD")+" "+$(this.checkTimeNative).val());
+                            this.props.checkpoint.checkTime=new Date(moment(this.props.checkpoint.checkTime).format("YYYY/MM/DD")+" "+$(this.checkTimeNative).val());
                             this.props.checkpoint.syncOk=false;
                             showToast("записано " + $(this.checkTimeNative).val());
                         }}

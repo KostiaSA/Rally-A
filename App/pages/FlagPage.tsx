@@ -67,7 +67,8 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     handleCheckClick = () => {
         vibratePushButton();
-        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, new Date())} onClose={()=>{}}/>);
+        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, new Date())}
+                                     onClose={()=>{}}/>);
         this.handleNumButtonClick("C");
     }
 
@@ -153,27 +154,29 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                 <div className="row">
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
                         <table style={{width:"100%"}}>
-                            <tr>
-                                <td style={{textAlign:"center",padding:5}}>
-                                    <span>N:</span>
-                                    <span style={{  color: "teal",
-                                        fontWeight: "bold",
-                                        border: "teal solid 1px",
-                                        padding: 3
-                                     }}
-                                    >
-                                      {this.raceNumber}
-                                   </span>
+                            <tbody>
+                                <tr>
+                                    <td style={{textAlign:"center",padding:5}}>
+                                        <span>N:</span>
+                                        <span style={{  color: "teal",
+                                            fontWeight: "bold",
+                                            border: "teal solid 1px",
+                                            padding: 3
+                                         }}
+                                        >
+                                          {this.raceNumber}
+                                       </span>
 
-                                </td>
-                                <td style={{padding:5}}>
-                                    <span style={{color:"coral"}}>{this.pilot.autoName + "  "}</span>
-                                    <span>{this.pilot.name}</span>
-                                    <div style={{ color:"green"}}>
-                                        { this.checkpoint ? "check: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td style={{padding:5}}>
+                                        <span style={{color:"coral"}}>{this.pilot.autoName + "  "}</span>
+                                        <span>{this.pilot.name}</span>
+                                        <div style={{ color:"green"}}>
+                                            { this.checkpoint ? "check: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
