@@ -75,19 +75,19 @@ export class App extends React.Component<any,any> {
         this.pages.push(cogPage);
 
         appState.loginPage = {
-            icon: "fa-user",
-            color: "royalblue",
+            icon: "fa-sign-out",
+            color: "indianred",
             content:<LoginPage/>
         }
         this.pages.push(appState.loginPage);
         appState.activePage = appState.loginPage;
 
-        let chevronPage: IAppPage = {
-            icon: "fa-chevron-right",
-            color: "gray",
-            content:<div>chevron</div>
-        }
-        this.pages.push(chevronPage);
+        // let chevronPage: IAppPage = {
+        //     icon: "fa-chevron-right",
+        //     color: "gray",
+        //     content:<div>chevron</div>
+        // }
+        //this.pages.push(chevronPage);
     }
 
     nativeTabs: Element;

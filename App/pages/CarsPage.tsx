@@ -72,7 +72,7 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th style={{textAlign: "center"}}>старт.N</th>
+                                    <th style={{textAlign: "center"}}>старт</th>
                                     <th>пилот</th>
                                     <th style={{textAlign: "center"}}>номер</th>
                                     <th style={{textAlign: "center"}}>check</th>

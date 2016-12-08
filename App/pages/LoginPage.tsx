@@ -58,7 +58,10 @@ export class LoginPage extends React.Component<ILoginPageProps,any> {
                         this.httpRequestRunning = false;
                         clearTimeout(timeIndex);
 
+                        // очистка хранилища
+                        appState.clearState();
                         window.localStorage.clear();
+
 
                         window.localStorage.setItem("login", appState.login);
                         window.localStorage.setItem("password", appState.password);

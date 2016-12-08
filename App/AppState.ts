@@ -46,6 +46,22 @@ export class AppState {
     @observable legRegistration: ILegRegistration[] = [];
     @observable checkPoints: ICheckPoint[] = [];
 
+    clearState(){
+        this.rallyHeaderDbts="";
+        this.pilotsDbts="";
+        this.rallyLegDbts="";
+        this.rallyPunktDbts="";
+        this.legRegistrationDbts="";
+        this.checkPointsDbts="";
+
+        this.rallyHeader=undefined;
+        this.pilots= [];
+        this.rallyLeg=undefined;
+        this.rallyPunkt=undefined;
+        this.legRegistration = [];
+        this.checkPoints = [];
+    }
+
     getIsLogined() {
         return this.encryptKey !== undefined;
     }
