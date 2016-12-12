@@ -76,7 +76,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                     <td style={userStyle}>{appState.user}</td>
                                 </tr>
                                 <tr>
-                                    <td>Время MSK</td>
+                                    <td>Время гонки</td>
                                     <td style={timeStyle}>{moment(new Date).format("DD MMM YYYY,  HH:mm")}</td>
                                 </tr>
                                 <tr>
