@@ -11,6 +11,7 @@ import {httpRequest} from "./utils/httpRequest";
 import {getRandomString} from "./utils/getRandomString";
 import {showToast} from "./utils/showToast";
 import moment = require("moment");
+import {getGpsTime} from "./utils/getGpsTime";
 
 export class AppState {
     @observable sessionId: string;
@@ -31,6 +32,9 @@ export class AppState {
 
     encryptKey: string;
 
+    @observable gpsTime: Date = new Date();
+    @observable gpsOk: boolean = false;
+
     rallyHeaderDbts?: string;
     pilotsDbts?: string;
     rallyLegDbts?: string;
@@ -46,18 +50,18 @@ export class AppState {
     @observable legRegistration: ILegRegistration[] = [];
     @observable checkPoints: ICheckPoint[] = [];
 
-    clearState(){
-        this.rallyHeaderDbts="";
-        this.pilotsDbts="";
-        this.rallyLegDbts="";
-        this.rallyPunktDbts="";
-        this.legRegistrationDbts="";
-        this.checkPointsDbts="";
+    clearState() {
+        this.rallyHeaderDbts = "";
+        this.pilotsDbts = "";
+        this.rallyLegDbts = "";
+        this.rallyPunktDbts = "";
+        this.legRegistrationDbts = "";
+        this.checkPointsDbts = "";
 
-        this.rallyHeader=undefined;
-        this.pilots= [];
-        this.rallyLeg=undefined;
-        this.rallyPunkt=undefined;
+        this.rallyHeader = undefined;
+        this.pilots = [];
+        this.rallyLeg = undefined;
+        this.rallyPunkt = undefined;
         this.legRegistration = [];
         this.checkPoints = [];
     }
@@ -103,11 +107,11 @@ export class AppState {
         //     syncOk: false
         // };
         //
-        this.checkPoints.push(this.getNewCheck(legRegsId,time));
+        this.checkPoints.push(this.getNewCheck(legRegsId, time));
         showToast("записано " + moment(time).format("HH:mm:ss"));
     }
 
-    getNewCheck(legRegsId: number, time: Date):ICheckPoint {
+    getNewCheck(legRegsId: number, time: Date): ICheckPoint {
 
         let check: ICheckPoint = {
             legRegsId: legRegsId,
@@ -298,7 +302,7 @@ export class AppState {
 
                         ans.checkPoints.forEach((item: ICheckPoint, index: number) => {
 
-                            console.log("new Date(item.checkTime)",item.checkTime);
+                            console.log("new Date(item.checkTime)", item.checkTime);
 
                             item.checkTime = new Date(item.checkTime);
                             item.penaltyTime = new Date(item.penaltyTime);
@@ -411,6 +415,62 @@ export class AppState {
         setInterval(() => {
             this.save_CheckPoints_ToServer();
         }, 5000);
+
+        // setInterval(() => {
+        //     getGpsTime()
+        //         .then((time: Date) => {
+        //             this.gpsTime = time;
+        //             this.gpsOk = true;
+        //         })
+        //         .catch((err: any) => {
+        //             this.gpsTime = new Date();
+        //             this.gpsOk = false;
+        //         });
+        // }, 500);
+
+
+        // Implement this in `deviceready` event callback
+        ((window as any)["AdvancedGeolocation"] as any).start(function (success: any) {
+
+                try {
+                    var jsonObject = JSON.parse(success);
+                    console.log(jsonObject);
+                    //console.log(jsonObject.provider, new Date(jsonObject.timestamp));
+                    let time = new Date(jsonObject.timestamp);
+                    if (time.getFullYear() === (new Date()).getFullYear()) {
+                        appState.gpsTime = time;
+                        appState.gpsOk = true;
+                    }
+
+                }
+                catch (exc) {
+                    appState.gpsOk = false;
+                    console.log("Invalid JSON: " + exc);
+                }
+            },
+            function (error: any) {
+                appState.gpsOk = false;
+                console.log("ERROR! " + JSON.stringify(error));
+            },
+            ////////////////////////////////////////////
+            //
+            // REQUIRED:
+            // These are required Configuration options!
+            // See API Reference for additional details.
+            //
+            ////////////////////////////////////////////
+            {
+                "minTime": 500,         // Min time interval between updates (ms)
+                "minDistance": 1,       // Min distance between updates (meters)
+                "noWarn": true,         // Native location provider warnings
+                "providers": "gps",     // Return GPS, NETWORK and CELL locations
+                "useCache": false,       // Return GPS and NETWORK cached locations
+                "satelliteData": false, // Return of GPS satellite info
+                "buffer": false,        // Buffer location data
+                "bufferSize": 0,        // Max elements in buffer
+                "signalStrength": false // Return cell signal strength data
+            });
+
     }
 }
 

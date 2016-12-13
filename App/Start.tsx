@@ -49,7 +49,77 @@ if (getIsCordovaApp()) {
         // function, we must explicitly call 'app.receivedEvent(...);'
         onDeviceReady: function () {
             myapp.receivedEvent('deviceready');
+            //navigator.geolocation.getCurrentPosition((pos:Position)=>{console.log(new Date(pos.timestamp))});
             ReactDOM.render(<App ref={(e:any)=>setApp(e)}/>, document.body);
+
+            ///////////////////////////////////////////////////
+            ///////////////////////////////////////////////////
+
+            // // Implement this in `deviceready` event callback
+            // ((window as any)["AdvancedGeolocation"] as any).start(function (success:any) {
+            //
+            //         try {
+            //             var jsonObject = JSON.parse(success);
+            //             console.log(jsonObject);
+            //             console.log(jsonObject.provider, new Date(jsonObject.timestamp));
+            //
+            //             // switch (jsonObject.provider) {
+            //             //     case "gps":
+            //             //         //TODO
+            //             //         break;
+            //             //
+            //             //     case "network":
+            //             //         //TODO
+            //             //         break;
+            //             //
+            //             //     case "satellite":
+            //             //         //TODO
+            //             //         break;
+            //             //
+            //             //     case "cell_info":
+            //             //         //TODO
+            //             //         break;
+            //             //
+            //             //     case "cell_location":
+            //             //         //TODO
+            //             //         break;
+            //             //
+            //             //     case "signal_strength":
+            //             //         //TODO
+            //             //         break;
+            //             // }
+            //         }
+            //         catch (exc) {
+            //             console.log("Invalid JSON: " + exc);
+            //         }
+            //     },
+            //     function (error:any) {
+            //         console.log("ERROR! " + JSON.stringify(error));
+            //     },
+            //     ////////////////////////////////////////////
+            //     //
+            //     // REQUIRED:
+            //     // These are required Configuration options!
+            //     // See API Reference for additional details.
+            //     //
+            //     ////////////////////////////////////////////
+            //     {
+            //         "minTime": 500,         // Min time interval between updates (ms)
+            //         "minDistance": 1,       // Min distance between updates (meters)
+            //         "noWarn": true,         // Native location provider warnings
+            //         "providers": "gps",     // Return GPS, NETWORK and CELL locations
+            //         "useCache": false,       // Return GPS and NETWORK cached locations
+            //         "satelliteData": false, // Return of GPS satellite info
+            //         "buffer": false,        // Buffer location data
+            //         "bufferSize": 0,        // Max elements in buffer
+            //         "signalStrength": false // Return cell signal strength data
+            //     });
+
+
+
+            ///////////////////////////////////////////////////
+            ///////////////////////////////////////////////////
+
 
         },
         // Update DOM on a Received Event

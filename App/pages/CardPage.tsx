@@ -46,6 +46,10 @@ export class CardPage extends React.Component<ICardPageProps,any> {
             fontWeight: "bold"
         };
 
+        let gpsOkSpan =<span></span>;
+        if (appState.gpsOk)
+            gpsOkSpan =<div style={{ color:"green", marginLeft:10}}>GPS работает!</div>;
+
         return (
             <div className="container">
                 <div className="row" style={{ marginTop:20 }}>
@@ -65,11 +69,11 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 </tr>
                                 <tr>
                                     <td>Этап</td>
-                                    <td style={gonkaStyle}>{appState.rallyLeg ? appState.rallyLeg.num + ", " + appState.rallyLeg.name+"  (длина "+appState.rallyLeg.length+" км)" : ""}</td>
+                                    <td style={gonkaStyle}>{appState.rallyLeg ? appState.rallyLeg.num + ", " + appState.rallyLeg.name + "  (длина " + appState.rallyLeg.length + " км)" : ""}</td>
                                 </tr>
                                 <tr>
                                     <td>Пункт</td>
-                                    <td style={gonkaStyle}>{appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name+"  ("+appState.rallyPunkt.length+" км)" : ""}</td>
+                                    <td style={gonkaStyle}>{appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name + "  (" + appState.rallyPunkt.length + " км)" : ""}</td>
                                 </tr>
                                 <tr>
                                     <td>Судья на пункте</td>
@@ -77,11 +81,11 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 </tr>
                                 <tr>
                                     <td>Время гонки</td>
-                                    <td style={timeStyle}>{moment(new Date).format("DD MMM YYYY,  HH:mm")}</td>
+                                    <td style={timeStyle}>{moment(appState.gpsTime).format("DD MMM YYYY,  HH:mm:ss")}{gpsOkSpan}</td>
                                 </tr>
                                 <tr>
                                     <td>Обмен данными</td>
-                                    <td style={timeStyle}>{moment(appState.lastSyncroTime).format("DD MMM YYYY,  HH:mm")}</td>
+                                    <td style={timeStyle}>{moment(appState.lastSyncroTime).format("DD MMM YYYY,  HH:mm:ss")}</td>
                                 </tr>
                                 </tbody>
                             </table>

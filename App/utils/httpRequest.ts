@@ -18,7 +18,7 @@ export function httpRequest<TReq extends IReq,TAns extends IAns>(req: TReq): Pro
             xhr.setRequestHeader('Content-type', "application/json;charset=UTF-8");
 
             xhr.onload = function () {
-                let ansBody = JSON.parse(this.responseText) as TAns;
+                let ansBody = JSON.parse((this as XMLHttpRequest).responseText) as TAns;
                 if (ansBody.error)
                     reject(ansBody.error);
                 else {
