@@ -1,4 +1,4 @@
-// import * as Promise from "bluebird";
+///import * as Promise from "bluebird";
 // import {IReq, IAns, GET_ENCRYPT_KEY_CMD} from "../api/api";
 // import {appState} from "../AppState";
 // import crypto = require("crypto-js");

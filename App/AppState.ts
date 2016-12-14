@@ -421,17 +421,19 @@ export class AppState {
 
         // вычисляем gonkaTime
         setInterval(() => {
-            // //?
-            //
-            // getGpsTime()
-            //     .then((time: Date) => {
-            //         this.gpsTime = time;
-            //         this.gpsOk = true;
-            //     })
-            //     .catch((err: any) => {
-            //         this.gpsTime = new Date();
-            //         this.gpsOk = false;
-            //     });
+            if (appState.rallyLeg) {
+                let deviceTimeZoneOffset = new Date().getTimezoneOffset();
+                let gonkaTimeZoneOffset = appState.rallyLeg.timeZone * -60;
+
+                if (!this.gpsLastDeviceTime || !getIsCordovaApp()) {
+                    this.gonkaTime = new Date(new Date().getTime() + deviceTimeZoneOffset * 60000 - gonkaTimeZoneOffset * 60000);
+                }
+                else {
+                    let gpsDelta = this.gpsLastGpsTime!.getTime() - this.gpsLastDeviceTime!.getTime();
+                    this.gonkaTime = new Date(new Date().getTime() + gpsDelta + deviceTimeZoneOffset * 60000 - gonkaTimeZoneOffset * 60000);
+
+                }
+            }
         }, 500);
 
 
@@ -444,7 +446,7 @@ export class AppState {
                         //console.log(jsonObject);
                         //console.log(jsonObject.provider, new Date(jsonObject.timestamp));
                         let gpsTime = new Date(jsonObject.timestamp);
-                        let deviceTime=new Date();
+                        let deviceTime = new Date();
                         if (gpsTime.getFullYear() === deviceTime.getFullYear()) {
                             appState.gpsLastGpsTime = gpsTime;
                             appState.gpsLastDeviceTime = deviceTime;

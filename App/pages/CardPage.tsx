@@ -8,6 +8,8 @@ import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
 import moment = require("moment");
 import {getIsCordovaApp} from "../utils/getIsCordovaApp";
+import {getDeviceTimeZoneOffsetStr} from "../utils/getDeviceTimeZoneOffsetStr";
+import {getGpsTimeZoneOffsetStr} from "../utils/getGpsTimeZoneOffsetStr";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -93,7 +95,11 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                     <td style={userStyle}>{appState.user}</td>
                                 </tr>
                                 <tr>
-                                    <td>Время гонки</td>
+                                    <td>Время <span style={{whiteSpace:"nowrap"}}>{getDeviceTimeZoneOffsetStr()}</span></td>
+                                    <td style={timeStyle}>{moment(new Date()).format("DD MMM YYYY,  HH:mm:ss")}</td>
+                                </tr>
+                                <tr>
+                                    <td>Время гонки <span style={{whiteSpace:"nowrap"}}>{getGpsTimeZoneOffsetStr()}</span></td>
                                     <td style={timeStyle}>{moment(appState.gonkaTime).format("DD MMM YYYY,  HH:mm:ss")}{gpsOkSpan}</td>
                                 </tr>
                                 <tr>

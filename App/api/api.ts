@@ -1,5 +1,3 @@
-
-
 export const CheckPoint_replTable = 2;
 export const LegRegistration_replTable = 3;
 export const Pilots_replTable = 4;
@@ -22,7 +20,6 @@ export interface IAns {
 }
 
 
-
 // -------  GET_ENCRYPT_KEY ----------
 export const GET_ENCRYPT_KEY_CMD = "1";
 
@@ -34,7 +31,6 @@ export interface IGetEncryptKeyAns extends IAns {
 }
 
 
-
 // -------  LOGIN ----------
 export const LOGIN_CMD = "2";
 
@@ -44,9 +40,8 @@ export interface ILoginReq extends IReq {
 }
 
 export interface ILoginAns extends IAns {
-    user:string
+    user: string
 }
-
 
 
 // -------  RallyHeader ----------
@@ -69,7 +64,6 @@ export interface ILoadRallyHeaderAns extends IAns {
     rallyHeader?: IRallyHeader;
     dbts?: string;
 }
-
 
 
 // -------  Pilots ----------
@@ -97,7 +91,8 @@ export interface IRallyLeg {
     num: string;
     name: string;
     date: Date;
-    length:number;
+    length: number;
+    timeZone: number;  // в часах, (МСК это +3)
 }
 
 export const LOAD_RALLYLEG_CMD = "5";
@@ -116,13 +111,13 @@ export interface IRallyPunkt {
     id: number;
     num: string;
     name: string;
-    length:number;
+    length: number;
 }
 
 export const LOAD_RALLYPUNKT_CMD = "6";
 
 export interface ILoadRallyPunktReq extends IReq {
-    login:string;
+    login: string;
     dbts: string;
 }
 
@@ -159,10 +154,10 @@ export interface ICheckPoint {
     penaltyTime: Date;
 
     mobileId: string;
-    mobileTime:Date;
-    mobileLogin:string;
-    mobileDevice:string;
-    syncOk:boolean;
+    mobileTime: Date;
+    mobileLogin: string;
+    mobileDevice: string;
+    syncOk: boolean;
 }
 
 export const LOAD_CHECKPOINTS_CMD = "8";
