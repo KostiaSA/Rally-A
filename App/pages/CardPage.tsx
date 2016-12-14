@@ -7,6 +7,7 @@ import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
 import moment = require("moment");
+import {getIsCordovaApp} from "../utils/getIsCordovaApp";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -47,8 +48,20 @@ export class CardPage extends React.Component<ICardPageProps,any> {
         };
 
         let gpsOkSpan =<span></span>;
-        if (appState.gpsOk)
-            gpsOkSpan =<div style={{ color:"green", marginLeft:10}}>GPS работает!</div>;
+
+        if (getIsCordovaApp()) {
+            if (appState.gpsLastDeviceTime && ((new Date()).getTime() - appState.gpsLastDeviceTime.getTime() < 5 * 60 * 1000/* меньше 5 мин */)) {
+                gpsOkSpan =<div style={{ color:"green", marginLeft:10}}>GPS работает!</div>;
+            }
+            else if (appState.gpsLastDeviceTime && ((new Date()).getTime() - appState.gpsLastDeviceTime.getTime() < 30 * 60 * 1000/* меньше 30 мин */)) {
+                gpsOkSpan =<div style={{ color:"orange", marginLeft:10}}>GPS тупит!</div>;
+
+            }
+            else {
+                gpsOkSpan =<div style={{ color:"tomato", marginLeft:10}}>GPS не работает!</div>;
+            }
+        }
+
 
         return (
             <div className="container">
@@ -81,7 +94,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 </tr>
                                 <tr>
                                     <td>Время гонки</td>
-                                    <td style={timeStyle}>{moment(appState.gpsTime).format("DD MMM YYYY,  HH:mm:ss")}{gpsOkSpan}</td>
+                                    <td style={timeStyle}>{moment(appState.gonkaTime).format("DD MMM YYYY,  HH:mm:ss")}{gpsOkSpan}</td>
                                 </tr>
                                 <tr>
                                     <td>Обмен данными</td>
