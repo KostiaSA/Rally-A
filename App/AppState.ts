@@ -137,7 +137,7 @@ export class AppState {
     pushNewFinish(time: Date) {
 
         this.finishList.push(time);
-        showToast("записано " + moment(time).format("HH:mm:ss"));
+        //showToast("записано " + moment(time).format("HH:mm:ss"));
     }
 
     loadTablesFromServer() {

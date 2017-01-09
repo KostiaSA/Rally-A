@@ -12,6 +12,7 @@ import {vibratePushButton, vibrate} from "../utils/vibrate";
 import {showModal} from "../modals/showModal";
 import {CheckTimeUpdateModal} from "../modals/CheckTimeUpdateModal";
 import {CheckTimeNewModal} from "../modals/CheckTimeNewModal";
+import {SetFinishRaceNumberModal} from "../modals/SetFinishRaceNumberModal";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -35,47 +36,49 @@ export class FlagPage2 extends React.Component<IFlagPageProps,any> {
 
     componentDidMount() {
 
-        setInterval(() => {
-            $("#check-time").text(moment(new Date()).format("HH:mm:ss"));
-        }, 1000);
+        // setInterval(() => {
+        //     $("#check-time").text(moment(new Date()).format("HH:mm:ss"));
+        // }, 1000);
 
     };
 
-    handleNumButtonClick = (num: string) => {
-        vibratePushButton();
-        if (num === "C")
-            this.raceNumber = "";
-        else if (num === "<") {
-            if (this.raceNumber.length > 0)
-                this.raceNumber = this.raceNumber.substr(0, this.raceNumber.length - 1);
-        }
-        else {
-            this.raceNumber += num;
-        }
+    // handleNumButtonClick = (num: string) => {
+    //     vibratePushButton();
+    //     if (num === "C")
+    //         this.raceNumber = "";
+    //     else if (num === "<") {
+    //         if (this.raceNumber.length > 0)
+    //             this.raceNumber = this.raceNumber.substr(0, this.raceNumber.length - 1);
+    //     }
+    //     else {
+    //         this.raceNumber += num;
+    //     }
+    //
+    //     this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
+    //     //this.pilot = appState.getPilot(this.legRegistration.pilotId);
+    //     this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+    //
+    //
+    //     if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
+    //         vibrate([70, 70, 70, 70, 70]);
+    //     else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
+    //         vibrate(300);
+    //
+    // }
 
-        this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
-        //this.pilot = appState.getPilot(this.legRegistration.pilotId);
-        this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
-
-
-        if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
-            vibrate([70, 70, 70, 70, 70]);
-        else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
-            vibrate(300);
-
-    }
-
-    // handleCheckClick = () => {
+     handleTimeClick = (finishTime: Date) => {
+         vibratePushButton();
+         showModal(<SetFinishRaceNumberModal finishTime={finishTime} onClose={()=>{}}/>);
     //     vibratePushButton();
     //     showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, appState.gonkaTime!)}
     //                                  onClose={()=>{}}/>);
     //     this.handleNumButtonClick("C");
-    // }
+     }
 
     handleCheckWithTimeClick = () => {
         vibratePushButton();
         appState.pushNewFinish(appState.gonkaTime!);
-        this.handleNumButtonClick("C");
+        //this.handleNumButtonClick("C");
     }
 
     // handleUpdateClick = () => {
@@ -97,6 +100,14 @@ export class FlagPage2 extends React.Component<IFlagPageProps,any> {
             fontWeight: "normal",
             marginLeft: 5,
             marginTop: 20,
+        }
+
+        let timeButtonStyle: CSSProperties = {
+            paddingLeft: 24,
+            paddingRight: 24,
+            fontWeight: "normal",
+            marginLeft: 5,
+            marginTop: 5,
         }
 
         let numButtonStyle: CSSProperties = {
@@ -161,51 +172,17 @@ export class FlagPage2 extends React.Component<IFlagPageProps,any> {
                 <div className="row" style={{marginTop:30}}>
                     <table className="table">
                         <tbody>
-                        { (appState.legRegistration || []).map((regItem: ILegRegistration, index: number) => {
-                            //let pilot = appState.getPilot(regItem.pilotId);
-                            let checkTime = "";
-                            let checkTimeColor = "green";
-                            let penaTime = "";
-                            let cp: ICheckPoint | undefined;
-                            if (appState.rallyPunkt) {
-                                cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt.id, regItem.id);
-                                if (cp) {
-                                    checkTime = moment(cp.checkTime).format("HH:mm:ss");
-                                    if (cp.penaltyTime && (cp.penaltyTime.getHours() > 0 || cp.penaltyTime.getMinutes() || cp.penaltyTime.getSeconds() > 0)) {
-                                        penaTime = "+ ";
-                                        if (cp.penaltyTime.getHours() > 0)
-                                            penaTime += cp.penaltyTime.getHours() + " час ";
-                                        if (cp.penaltyTime.getMinutes() > 0)
-                                            penaTime += cp.penaltyTime.getMinutes() + " мин ";
-                                        if (cp.penaltyTime.getSeconds() > 0)
-                                            penaTime += cp.penaltyTime.getSeconds() + " сек ";
-
-                                    }
-                                    if (cp.syncOk !== true)
-                                        checkTimeColor = "coral";
-                                }
-                            }
+                        { (appState.finishList || []).map((finishTime: Date, index: number) => {
 
                             return (
                                 <tr key={index}>
-                                    <td style={{textAlign: "center"}}>{index}</td>
-                                    <td>
-                                        <span style={{color: "coral"}}>{regItem.autoName}</span>
-                                        <br/>
-                                        <span>{regItem.pilotName}</span>
-                                    </td>
-                                    <td style={{textAlign: "center", color: "teal"}}>{regItem.raceNumber}</td>
-                                    <td style={{textAlign: "center"}}
-                                        onClick={()=>{
-                                                    if (cp){
-                                                      vibratePushButton();
-                                                      showModal(<CheckTimeUpdateModal checkpoint={cp} onClose={()=>{}}/>);
-                                                    }
-                                                }}
-                                    >
-                                        <span style={{color: checkTimeColor}}>{checkTime}</span>
-                                        <br/>
-                                        <span style={{color: "red"}}>{penaTime}</span>
+                                    <td style={{textAlign: "center"}}>
+                                        <button className={"btn btn-default"} style={timeButtonStyle}
+                                                onClick={()=>{this.handleTimeClick(finishTime)}}>
+                                            <i className="fa fa-flag-checkered" style={{fontSize: 16, color: "green", paddingLeft: 5, paddingRight: 5}}></i>
+                                            <span style={{fontSize: 16, color: "green", paddingLeft: 5, paddingRight: 5}}>{moment(finishTime).format("HH:mm:ss")}</span>
+                                        </button>
+
                                     </td>
                                 </tr>
                             );
