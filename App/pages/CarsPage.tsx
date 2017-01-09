@@ -80,7 +80,7 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                 </thead>
                                 <tbody>
                                 { (appState.legRegistration || []).map((regItem: ILegRegistration, index: number) => {
-                                    let pilot = appState.getPilot(regItem.pilotId);
+                                    //let pilot = appState.getPilot(regItem.pilotId);
                                     let checkTime = "";
                                     let checkTimeColor = "green";
                                     let penaTime = "";
@@ -103,13 +103,14 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                                 checkTimeColor = "coral";
                                         }
                                     }
+
                                     return (
                                         <tr key={index}>
-                                            <td style={{textAlign: "center"}}>{regItem.npp}</td>
+                                            <td style={{textAlign: "center"}}>{index}</td>
                                             <td>
-                                                <span style={{color: "coral"}}>{pilot.autoName}</span>
+                                                <span style={{color: "coral"}}>{regItem.autoName}</span>
                                                 <br/>
-                                                <span>{pilot.name}</span>
+                                                <span>{regItem.pilotName}</span>
                                             </td>
                                             <td style={{textAlign: "center", color: "teal"}}>{regItem.raceNumber}</td>
                                             <td style={{textAlign: "center"}}

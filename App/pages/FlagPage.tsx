@@ -6,7 +6,7 @@ import {httpRequest} from "../utils/httpRequest";
 import {observable} from "mobx";
 import SyntheticEvent = React.SyntheticEvent;
 import CSSProperties = React.CSSProperties;
-import {ILegRegistration, IPilot, ICheckPoint} from "../api/api";
+import {ILegRegistration, ICheckPoint} from "../api/api";
 import moment = require("moment");
 import {vibratePushButton, vibrate} from "../utils/vibrate";
 import {showModal} from "../modals/showModal";
@@ -30,14 +30,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     @observable raceNumber: string = "";
     @observable legRegistration: ILegRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
-    @observable pilot: IPilot = appState.getPilot(this.legRegistration.pilotId);
+    //@observable pilot: IPilot = appState.getPilot(this.legRegistration.pilotId);
     @observable checkpoint: ICheckPoint | undefined;
 
     componentDidMount() {
 
-        setInterval(() => {
-            $("#check-time").text(moment(new Date()).format("HH:mm:ss"));
-        }, 1000);
+        // setInterval(() => {
+        //     $("#check-time").text(moment(appState.gonkaTime).format("HH:mm:ss"));
+        // }, 1000);
 
     };
 
@@ -54,7 +54,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         }
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
-        this.pilot = appState.getPilot(this.legRegistration.pilotId);
+        //this.pilot = appState.getPilot(this.legRegistration.pilotId);
         this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
 
 
@@ -67,14 +67,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     handleCheckClick = () => {
         vibratePushButton();
-        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, new Date())}
+        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, appState.gonkaTime!)}
                                      onClose={()=>{}}/>);
         this.handleNumButtonClick("C");
     }
 
     handleCheckWithTimeClick = () => {
         vibratePushButton();
-        appState.pushNewCheck(this.legRegistration.id, new Date());
+        appState.pushNewCheck(this.legRegistration.id, appState.gonkaTime!);
         this.handleNumButtonClick("C");
     }
 
@@ -136,6 +136,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
             updateEnabledClass = "";
         }
 
+
         return (
             <div className="container">
                 <div className="row" style={{ marginTop:20 }}>
@@ -169,8 +170,8 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
                                     </td>
                                     <td style={{padding:5}}>
-                                        <span style={{color:"coral"}}>{this.pilot.autoName + "  "}</span>
-                                        <span>{this.pilot.name}</span>
+                                        <span style={{color:"coral"}}>{this.legRegistration.autoName + "  "}</span>
+                                        <span>{this.legRegistration.pilotName}</span>
                                         <div style={{ color:"green"}}>
                                             { this.checkpoint ? "check: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
                                         </div>
@@ -247,7 +248,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         </button>
                         <button className={"btn btn-lg btn-success "+checkEnabledClass} style={okButtonStyle}
                                 onClick={this.handleCheckWithTimeClick}>
-                            check <span id="check-time"></span>
+                            check {moment(appState.gonkaTime).format("HH:mm:ss")}
                         </button>
                     </div>
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>

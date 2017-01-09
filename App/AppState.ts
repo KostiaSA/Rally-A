@@ -1,10 +1,10 @@
 import {observable} from "mobx";
 import {IAppPage} from "./App";
 import {
-    IRallyHeader, IPilot, ILoadRallyHeaderReq, LOAD_RALLYHEADER_CMD, ILoadRallyHeaderAns,
-    IRallyLeg, ILoadRallyLegReq, LOAD_RALLYLEG_CMD, ILoadRallyLegAns, IRallyPunkt, ILoadRallyPunktReq,
+    IRallyHeader,  ILoadRallyHeaderReq, LOAD_RALLYHEADER_CMD, ILoadRallyHeaderAns,
+    IRallySpecUch, ILoadRallySpecUchReq, LOAD_RALLYSPECUCH_CMD, ILoadRallySpecUchAns, IRallyPunkt, ILoadRallyPunktReq,
     LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns, ILegRegistration, ILoadLegRegistrationReq, LOAD_LEGREGISTRATION_CMD,
-    ILoadLegRegistrationAns, ILoadPilotsReq, LOAD_PILOTS_CMD, ILoadPilotsAns, LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
+    ILoadLegRegistrationAns,  LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
     ILoadCheckPointsAns, ICheckPoint, ISaveCheckPointsReq, ISaveCheckPointsAns, SAVE_CHECKPOINTS_CMD
 } from "./api/api";
 import {httpRequest} from "./utils/httpRequest";
@@ -25,9 +25,11 @@ export class AppState {
     @observable winWidth: number;
 
     @observable lastSyncroTime: Date;
+    @observable currSpecUchIndex: number = 0;
 
     loginPage: IAppPage;
     flagPage: IAppPage;
+    flagPage2: IAppPage;
     cardPage: IAppPage;
 
     encryptKey: string;
@@ -39,30 +41,31 @@ export class AppState {
 
     rallyHeaderDbts?: string;
     pilotsDbts?: string;
-    rallyLegDbts?: string;
+    rallySpecUchDbts?: string;
     rallyPunktDbts?: string;
     legRegistrationDbts?: string;
     checkPointsDbts?: string;
 
 
     @observable rallyHeader?: IRallyHeader;
-    @observable pilots: IPilot[] = [];
-    @observable rallyLeg?: IRallyLeg;
+    //@observable pilots: IPilot[] = [];
+    @observable rallySpecUch?: IRallySpecUch[];
     @observable rallyPunkt?: IRallyPunkt;
     @observable legRegistration: ILegRegistration[] = [];
     @observable checkPoints: ICheckPoint[] = [];
+    @observable finishList: Date[] = [];
 
     clearState() {
         this.rallyHeaderDbts = "";
         this.pilotsDbts = "";
-        this.rallyLegDbts = "";
+        this.rallySpecUchDbts = "";
         this.rallyPunktDbts = "";
         this.legRegistrationDbts = "";
         this.checkPointsDbts = "";
 
         this.rallyHeader = undefined;
-        this.pilots = [];
-        this.rallyLeg = undefined;
+        //this.pilots = [];
+        this.rallySpecUch = undefined;
         this.rallyPunkt = undefined;
         this.legRegistration = [];
         this.checkPoints = [];
@@ -72,14 +75,14 @@ export class AppState {
         return this.encryptKey !== undefined;
     }
 
-    getPilot(pilotId: number): IPilot {
-        let ret: IPilot | undefined = (this.pilots || []).find((item: IPilot) => item.id === pilotId);
-        return ret || {id: -1, name: "", engName: "", autoName: ""};
-    }
+    // getPilot(pilotId: number): IPilot {
+    //     let ret: IPilot | undefined = (this.pilots || []).find((item: IPilot) => item.id === pilotId);
+    //     return ret || {id: -1, name: "", engName: "", autoName: ""};
+    // }
 
     getLegRegistrationByRaceNumber(raceNum: string): ILegRegistration {
         let ret: ILegRegistration | undefined = (this.legRegistration || []).find((item: ILegRegistration) => item.raceNumber.trim() === raceNum.trim());
-        return ret || {id: -1, pilotId: -1, raceNumber: "", npp: -1, startTime: new Date()};
+        return ret || {id: -1} as any;
     }
 
     getCheckPointByRallyPunktAndLegRegsId(punktId: number, legRegsId: number): ICheckPoint | undefined {
@@ -131,15 +134,21 @@ export class AppState {
         return check;
     }
 
+    pushNewFinish(time: Date) {
+
+        this.finishList.push(time);
+        showToast("записано " + moment(time).format("HH:mm:ss"));
+    }
+
     loadTablesFromServer() {
         if (!this.getIsLogined())
             return;
 
         this.load_RallyHeader_FromServer();
-        this.load_RallyLeg_FromServer();
+        this.load_RallySpecUch_FromServer();
         this.load_RallyPunkt_FromServer();
         this.load_LegRegistration_FromServer();
-        this.load_Pilots_FromServer();
+        //this.load_Pilots_FromServer();
 
         setTimeout(() => {
             this.load_CheckPoints_FromServer();
@@ -175,22 +184,24 @@ export class AppState {
 
     }
 
-    load_RallyLeg_FromServer() {
+    load_RallySpecUch_FromServer() {
 
-        let req: ILoadRallyLegReq = {
-            cmd: LOAD_RALLYLEG_CMD,
-            dbts: this.rallyLegDbts || ""
+        let req: ILoadRallySpecUchReq = {
+            cmd: LOAD_RALLYSPECUCH_CMD,
+            dbts: this.rallySpecUchDbts || ""
         };
 
-        httpRequest<ILoadRallyLegReq,ILoadRallyLegAns>(req)
-            .then((ans: ILoadRallyLegAns) => {
-                if (ans.rallyLeg) {
-                    this.rallyLegDbts = ans.dbts;
-                    this.rallyLeg = ans.rallyLeg;
-                    this.rallyLeg.date = new Date(this.rallyLeg.date);
+        httpRequest<ILoadRallySpecUchReq,ILoadRallySpecUchAns>(req)
+            .then((ans: ILoadRallySpecUchAns) => {
+                if (ans.rallySpecUch) {
+                    this.rallySpecUchDbts = ans.dbts;
+                    this.rallySpecUch = ans.rallySpecUch;
 
-                    window.localStorage.setItem("rallyLegDbts", ans.dbts!);
-                    window.localStorage.setItem("rallyLeg", JSON.stringify(ans.rallyLeg));
+                    //todo  this.rallySpecUch.date = new Date(this.rallySpecUch.date)
+                    // this.rallySpecUch.date = new Date(this.rallySpecUch.date);
+
+                    window.localStorage.setItem("rallySpecUchDbts", ans.dbts!);
+                    window.localStorage.setItem("rallySpecUch", JSON.stringify(ans.rallySpecUch));
                 }
                 this.lastSyncroTime = new Date();
             })
@@ -239,9 +250,9 @@ export class AppState {
                     this.legRegistrationDbts = ans.dbts;
                     this.legRegistration = ans.legRegistration;
 
-                    this.legRegistration.forEach((item: ILegRegistration) => {
-                        item.startTime = new Date(item.startTime);
-                    });
+                    // this.legRegistration.forEach((item: ILegRegistration) => {
+                    //     item.startTime = new Date(item.startTime);
+                    // });
 
                     window.localStorage.setItem("legRegistrationDbts", ans.dbts!);
                     window.localStorage.setItem("legRegistration", JSON.stringify(ans.legRegistration));
@@ -255,33 +266,33 @@ export class AppState {
 
     }
 
-    load_Pilots_FromServer() {
-
-        let req: ILoadPilotsReq = {
-            cmd: LOAD_PILOTS_CMD,
-            dbts: this.pilotsDbts || ""
-        };
-
-        httpRequest<ILoadPilotsReq,ILoadPilotsAns>(req)
-            .then((ans: ILoadPilotsAns) => {
-                if (ans.pilots) {
-                    this.pilotsDbts = ans.dbts;
-                    this.pilots = ans.pilots;
-                    window.localStorage.setItem("pilotsDbts", ans.dbts!);
-                    window.localStorage.setItem("pilots", JSON.stringify(ans.pilots));
-                }
-                this.lastSyncroTime = new Date();
-            })
-            .catch((err: any) => {
-                console.error(err);
-            });
-
-
-    }
+    // load_Pilots_FromServer() {
+    //
+    //     let req: ILoadPilotsReq = {
+    //         cmd: LOAD_PILOTS_CMD,
+    //         dbts: this.pilotsDbts || ""
+    //     };
+    //
+    //     httpRequest<ILoadPilotsReq,ILoadPilotsAns>(req)
+    //         .then((ans: ILoadPilotsAns) => {
+    //             if (ans.pilots) {
+    //                 this.pilotsDbts = ans.dbts;
+    //                 this.pilots = ans.pilots;
+    //                 window.localStorage.setItem("pilotsDbts", ans.dbts!);
+    //                 window.localStorage.setItem("pilots", JSON.stringify(ans.pilots));
+    //             }
+    //             this.lastSyncroTime = new Date();
+    //         })
+    //         .catch((err: any) => {
+    //             console.error(err);
+    //         });
+    //
+    //
+    // }
 
     load_CheckPoints_FromServer() {
 
-        if (this.rallyPunkt && this.rallyLeg) {
+        if (this.rallyPunkt && this.rallySpecUch) {
 
             let req: ILoadCheckPointsReq = {
                 cmd: LOAD_CHECKPOINTS_CMD,
@@ -347,9 +358,9 @@ export class AppState {
             appState.rallyHeaderDbts = window.localStorage.getItem("rallyHeaderDbts") || undefined;
         }
 
-        if (window.localStorage.getItem("rallyLeg")) {
-            appState.rallyLeg = JSON.parse(window.localStorage.getItem("rallyLeg")!) as IRallyLeg;
-            appState.rallyLegDbts = window.localStorage.getItem("rallyLegDbts") || undefined;
+        if (window.localStorage.getItem("rallySpecUch")) {
+            appState.rallySpecUch = JSON.parse(window.localStorage.getItem("rallySpecUch")!) as IRallySpecUch[];
+            appState.rallySpecUchDbts = window.localStorage.getItem("rallySpecUchDbts") || undefined;
         }
 
 
@@ -363,17 +374,17 @@ export class AppState {
             appState.legRegistrationDbts = window.localStorage.getItem("legRegistrationDbts") || undefined;
         }
 
-        if (window.localStorage.getItem("pilots")) {
-            appState.pilots = JSON.parse(window.localStorage.getItem("pilots")!) as IPilot[];
-            appState.pilotsDbts = window.localStorage.getItem("pilotsDbts") || undefined;
-        }
+        // if (window.localStorage.getItem("pilots")) {
+        //     appState.pilots = JSON.parse(window.localStorage.getItem("pilots")!) as IPilot[];
+        //     appState.pilotsDbts = window.localStorage.getItem("pilotsDbts") || undefined;
+        // }
 
         if (window.localStorage.getItem("checkPoints")) {
             appState.checkPoints = JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[];
             appState.checkPointsDbts = window.localStorage.getItem("checkPointsDbts") || undefined;
         }
 
-        console.error("local-store1", JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[]);
+       // console.error("local-store1", JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[]);
 
     }
 
@@ -421,9 +432,9 @@ export class AppState {
 
         // вычисляем gonkaTime
         setInterval(() => {
-            if (appState.rallyLeg) {
+            if (appState.rallySpecUch && appState.rallySpecUch[appState.currSpecUchIndex]) {
                 let deviceTimeZoneOffset = new Date().getTimezoneOffset();
-                let gonkaTimeZoneOffset = appState.rallyLeg.timeZone * -60;
+                let gonkaTimeZoneOffset = appState.rallySpecUch[appState.currSpecUchIndex].timeZone * -60;
 
                 if (!this.gpsLastDeviceTime || !getIsCordovaApp()) {
                     this.gonkaTime = new Date(new Date().getTime() + deviceTimeZoneOffset * 60000 - gonkaTimeZoneOffset * 60000);

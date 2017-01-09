@@ -65,27 +65,21 @@ if (getIsCordovaApp()) {
             //
             //             // switch (jsonObject.provider) {
             //             //     case "gps":
-            //             //         //TODO
             //             //         break;
             //             //
             //             //     case "network":
-            //             //         //TODO
             //             //         break;
             //             //
             //             //     case "satellite":
-            //             //         //TODO
             //             //         break;
             //             //
             //             //     case "cell_info":
-            //             //         //TODO
             //             //         break;
             //             //
             //             //     case "cell_location":
-            //             //         //TODO
             //             //         break;
             //             //
             //             //     case "signal_strength":
-            //             //         //TODO
             //             //         break;
             //             // }
             //         }

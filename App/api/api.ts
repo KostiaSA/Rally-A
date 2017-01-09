@@ -2,7 +2,7 @@ export const CheckPoint_replTable = 2;
 export const LegRegistration_replTable = 3;
 export const Pilots_replTable = 4;
 export const RallyHeader_replTable = 5;
-export const RallyLeg_replTable = 6;
+export const RallySpecUch_replTable = 11;
 export const RallyPunkt_replTable = 7;
 export const UsersLink_replTable = 9;
 
@@ -67,42 +67,47 @@ export interface ILoadRallyHeaderAns extends IAns {
 
 
 // -------  Pilots ----------
-export interface IPilot {
-    id: number;
-    name: string;
-    engName: string;
-    autoName: string;
-}
+// export interface IPilot {
+//     id: number;
+//     name: string;
+//     engName: string;
+//     autoName: string;
+// }
+//
+// export const LOAD_PILOTS_CMD = "4";
+//
+// export interface ILoadPilotsReq extends IReq {
+//     dbts: string;
+// }
+//
+// export interface ILoadPilotsAns extends IAns {
+//     pilots?: IPilot[];
+//     dbts?: string;
+// }
 
-export const LOAD_PILOTS_CMD = "4";
-
-export interface ILoadPilotsReq extends IReq {
-    dbts: string;
-}
-
-export interface ILoadPilotsAns extends IAns {
-    pilots?: IPilot[];
-    dbts?: string;
-}
-
-// -------  RallyLeg ----------
-export interface IRallyLeg {
+// -------  RallySpecUch ----------
+export interface IRallySpecUch {
     id: number;
     num: string;
     name: string;
     date: Date;
     length: number;
     timeZone: number;  // в часах, (МСК это +3)
+    npp:number; // номер по порядку
+    cycleCount:number; // к-во кругов
+    stageDay:number;
+    nameEn: string;
+    minTimeMinutes:number;
 }
 
-export const LOAD_RALLYLEG_CMD = "5";
+export const LOAD_RALLYSPECUCH_CMD = "5";
 
-export interface ILoadRallyLegReq extends IReq {
+export interface ILoadRallySpecUchReq extends IReq {
     dbts: string;
 }
 
-export interface ILoadRallyLegAns extends IAns {
-    rallyLeg?: IRallyLeg;
+export interface ILoadRallySpecUchAns extends IAns {
+    rallySpecUch?: IRallySpecUch[];
     dbts?: string;
 }
 
@@ -129,10 +134,12 @@ export interface ILoadRallyPunktAns extends IAns {
 // -------  LegRegistration ----------
 export interface ILegRegistration {
     id: number;
-    pilotId: number;
+    pilotName: string;
+    pilotNameEn: string;
     raceNumber: string;
-    npp: number;
-    startTime: Date;
+    autoName:string;
+    autoClass:string;
+    country:string;
 }
 
 export const LOAD_LEGREGISTRATION_CMD = "7";

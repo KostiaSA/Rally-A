@@ -11,6 +11,7 @@ import {FlagPage} from "./pages/FlagPage";
 import {CarsPage} from "./pages/CarsPage";
 import {vibratePushButton} from "./utils/vibrate";
 import Notifications, {notify} from "react-notify-toast";
+import {FlagPage2} from "./pages/FlagPage2";
 
 
 export interface IAppPage {
@@ -58,6 +59,13 @@ export class App extends React.Component<any,any> {
             content:<FlagPage></FlagPage>
         }
         this.pages.push(appState.flagPage);
+
+        appState.flagPage2 = {
+            icon: "fa-flag-checkered",
+            color: "green",
+            content:<FlagPage2></FlagPage2>
+        }
+        this.pages.push(appState.flagPage2);
 
         let carPage: IAppPage = {
             icon: "fa-car",

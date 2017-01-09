@@ -8,8 +8,8 @@ import {appState} from "../AppState";
 //
 
 export function getGpsTimeZoneOffsetStr(): string {
-    if (appState.rallyLeg) {
-        var offset = appState.rallyLeg.timeZone;
+    if (appState.rallySpecUch && appState.rallySpecUch[appState.currSpecUchIndex]) {
+        var offset = appState.rallySpecUch[appState.currSpecUchIndex].timeZone;
 
         let x = numbro(offset).format("+0[.][0]");
 
