@@ -159,7 +159,7 @@ export interface ICheckPoint {
     legRegsId: number;
     rallyPunktId: number;
     checkTime: Date;
-    penaltyTime: Date;
+//    penaltyTime: Date;
 
     mobileId: string;
     mobileTime: Date;
