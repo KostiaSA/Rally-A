@@ -26,9 +26,9 @@ let QRCode = QRCodeReact as any;
 
 //import  NotifyResize = require("react-notify-resize");
 
- export interface ISetFinishRaceNumberModalProps extends IModalProps {
-     finishTime: Date;
- }
+export interface ISetFinishRaceNumberModalProps extends IModalProps {
+    finishTime: Date;
+}
 
 @observer
 export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumberModalProps,any> {
@@ -38,7 +38,7 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
         this.context = context;
 
         //let time = this.props.checkpoint.checkTime;
-      //  this.timeNum = time.getHours() * 10000 + time.getMinutes() * 100 + time.getSeconds();
+        //  this.timeNum = time.getHours() * 10000 + time.getMinutes() * 100 + time.getSeconds();
     }
 
     @observable raceNumber: string = "";
@@ -51,7 +51,7 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
     //     //$(this.getDOMNode()).on('hidden.bs.modal', this.props.handleHideModal);
     // };
 
-  //  @observable timeNum: number;
+    //  @observable timeNum: number;
 
     getTimeAsStr(timeNum: number): string {
         let str = this.pad(timeNum, 6);
@@ -81,7 +81,13 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
         //this.pilot = appState.getPilot(this.legRegistration.pilotId);
-        this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+        if (this.legRegistration.id >= 0) {
+
+            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+        }
+        else {
+            this.checkpoint = undefined;
+        }
 
 
         if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
@@ -127,7 +133,8 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
         return (
             <Modal>
                 <div className="modal-header">
-                    <h4 className="modal-title text-center">Укажите номер машины,<br/>время {moment(this.props.finishTime).format("HH:mm:ss")}</h4>
+                    <h4 className="modal-title text-center">
+                        Укажите номер машины,<br/>время {moment(this.props.finishTime).format("HH:mm:ss")}</h4>
                 </div>
                 <div className="modal-body">
                     <div className="container">

@@ -54,8 +54,14 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         }
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
-        //this.pilot = appState.getPilot(this.legRegistration.pilotId);
-        this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+        if (this.legRegistration.id>=0) {
+            //this.pilot = appState.getPilot(this.legRegistration.pilotId);
+            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+        }
+        else
+            this.checkpoint = undefined;
+        console.log("this.checkpoint",this.checkpoint);
+        console.log("legRegsId",this.checkpoint!.legRegsId)
 
 
         if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
@@ -170,8 +176,8 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
                                     </td>
                                     <td style={{padding:5}}>
-                                        <span style={{color:"coral"}}>{this.legRegistration.autoName + "  "}</span>
-                                        <span>{this.legRegistration.pilotName}</span>
+                                        <span style={{color:"coral"}}>{this.legRegistration?this.legRegistration.autoName:"" + "  "}</span>
+                                        <span>{this.legRegistration?this.legRegistration.pilotName:""}</span>
                                         <div style={{ color:"green"}}>
                                             { this.checkpoint ? "check: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
                                         </div>
