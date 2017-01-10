@@ -85,8 +85,8 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                     let checkTimeColor = "green";
                                     let penaTime = "";
                                     let cp: ICheckPoint | undefined;
-                                    if (appState.rallyPunkt) {
-                                        cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt.id, regItem.id);
+                                    if (appState.rallyPunkt[appState.rallyPunktIndex]) {
+                                        cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex].id, regItem.id);
                                         if (cp) {
                                             checkTime = moment(cp.checkTime).format("HH:mm:ss");
                                             if (cp.penaltyTime && (cp.penaltyTime.getHours() > 0 || cp.penaltyTime.getMinutes() || cp.penaltyTime.getSeconds() > 0)) {

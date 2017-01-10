@@ -83,7 +83,7 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
         //this.pilot = appState.getPilot(this.legRegistration.pilotId);
         if (this.legRegistration.id >= 0) {
 
-            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].id : -1, this.legRegistration.id);
         }
         else {
             this.checkpoint = undefined;
@@ -156,8 +156,8 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
 
                                         </td>
                                         <td style={{padding:5}}>
-                                            <span style={{color:"coral"}}>{this.legRegistration.autoName + "  "}</span>
-                                            <span>{this.legRegistration.pilotName}</span>
+                                            <span style={{color:"coral"}}>{this.legRegistration? this.legRegistration.autoName:"" + "  "}</span>
+                                            <span>{this.legRegistration?this.legRegistration.pilotName:""}</span>
                                         </td>
                                     </tr>
                                     </tbody>

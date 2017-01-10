@@ -127,7 +127,7 @@ export interface ILoadRallyPunktReq extends IReq {
 }
 
 export interface ILoadRallyPunktAns extends IAns {
-    rallyPunkt?: IRallyPunkt;
+    rallyPunkt: IRallyPunkt[];
     dbts?: string;
 }
 

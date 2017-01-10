@@ -56,7 +56,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
         if (this.legRegistration.id>=0) {
             //this.pilot = appState.getPilot(this.legRegistration.pilotId);
-            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt ? appState.rallyPunkt.id : -1, this.legRegistration.id);
+            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].id : -1, this.legRegistration.id);
         }
         else
             this.checkpoint = undefined;
@@ -152,7 +152,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
                                 <h5 className="text-center" style={{marginTop:5, marginBottom:5}}><i
                                     className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
-                                    {"ПУНКТ: "} {appState.rallyPunkt ? appState.rallyPunkt.num + ", " + appState.rallyPunkt.name + "  (" + appState.rallyPunkt.length + " км)" : ""}
+                                    {"ПУНКТ: "} {appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].num + ", " + appState.rallyPunkt[appState.rallyPunktIndex].name + "  (" + appState.rallyPunkt[appState.rallyPunktIndex].length + " км)" : ""}
                                 </h5>
                             </div>
                         </div>

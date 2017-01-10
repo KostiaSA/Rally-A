@@ -1,10 +1,10 @@
 import {observable} from "mobx";
 import {IAppPage} from "./App";
 import {
-    IRallyHeader,  ILoadRallyHeaderReq, LOAD_RALLYHEADER_CMD, ILoadRallyHeaderAns,
+    IRallyHeader, ILoadRallyHeaderReq, LOAD_RALLYHEADER_CMD, ILoadRallyHeaderAns,
     IRallySpecUch, ILoadRallySpecUchReq, LOAD_RALLYSPECUCH_CMD, ILoadRallySpecUchAns, IRallyPunkt, ILoadRallyPunktReq,
     LOAD_RALLYPUNKT_CMD, ILoadRallyPunktAns, ILegRegistration, ILoadLegRegistrationReq, LOAD_LEGREGISTRATION_CMD,
-    ILoadLegRegistrationAns,  LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
+    ILoadLegRegistrationAns, LOAD_CHECKPOINTS_CMD, ILoadCheckPointsReq,
     ILoadCheckPointsAns, ICheckPoint, ISaveCheckPointsReq, ISaveCheckPointsAns, SAVE_CHECKPOINTS_CMD
 } from "./api/api";
 import {httpRequest} from "./utils/httpRequest";
@@ -50,10 +50,12 @@ export class AppState {
     @observable rallyHeader?: IRallyHeader;
     //@observable pilots: IPilot[] = [];
     @observable rallySpecUch?: IRallySpecUch[];
-    @observable rallyPunkt?: IRallyPunkt;
+    @observable rallyPunkt: IRallyPunkt[] = [];
     @observable legRegistration: ILegRegistration[] = [];
     @observable checkPoints: ICheckPoint[] = [];
     @observable finishList: Date[] = [];
+
+    @observable rallyPunktIndex: number = 0;
 
     clearState() {
         this.rallyHeaderDbts = "";
@@ -66,7 +68,7 @@ export class AppState {
         this.rallyHeader = undefined;
         //this.pilots = [];
         this.rallySpecUch = undefined;
-        this.rallyPunkt = undefined;
+        this.rallyPunkt = [];
         this.legRegistration = [];
         this.checkPoints = [];
     }
@@ -120,7 +122,7 @@ export class AppState {
 
         let check: ICheckPoint = {
             legRegsId: legRegsId,
-            rallyPunktId: this.rallyPunkt!.id,
+            rallyPunktId: this.rallyPunkt[this.rallyPunktIndex].id,
             checkTime: time,
             penaltyTime: new Date(1990, 1, 1),
 
@@ -292,15 +294,15 @@ export class AppState {
 
     load_CheckPoints_FromServer() {
 
-        if (this.rallyPunkt && this.rallySpecUch) {
+        if (this.rallyPunkt[this.rallyPunktIndex] && this.rallySpecUch) {
 
             let req: ILoadCheckPointsReq = {
                 cmd: LOAD_CHECKPOINTS_CMD,
-                rallyPunktId: this.rallyPunkt.id,
+                rallyPunktId: this.rallyPunkt[this.rallyPunktIndex].id,
                 dbts: this.checkPointsDbts || ""
             };
 
-            let currPunkId = this.rallyPunkt.id;
+            let currPunkId = this.rallyPunkt[this.rallyPunktIndex].id;
 
             httpRequest<ILoadCheckPointsReq,ILoadCheckPointsAns>(req)
                 .then((ans: ILoadCheckPointsAns) => {
@@ -365,7 +367,7 @@ export class AppState {
 
 
         if (window.localStorage.getItem("rallyPunkt")) {
-            appState.rallyPunkt = JSON.parse(window.localStorage.getItem("rallyPunkt")!) as IRallyPunkt;
+            appState.rallyPunkt = JSON.parse(window.localStorage.getItem("rallyPunkt")!) as IRallyPunkt[];
             appState.rallyPunktDbts = window.localStorage.getItem("rallyPunktDbts") || undefined;
         }
 
@@ -384,7 +386,7 @@ export class AppState {
             appState.checkPointsDbts = window.localStorage.getItem("checkPointsDbts") || undefined;
         }
 
-       // console.error("local-store1", JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[]);
+        // console.error("local-store1", JSON.parse(window.localStorage.getItem("checkPoints")!) as ICheckPoint[]);
 
     }
 
