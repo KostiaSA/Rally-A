@@ -10,6 +10,8 @@ import moment = require("moment");
 import {getIsCordovaApp} from "../utils/getIsCordovaApp";
 import {getDeviceTimeZoneOffsetStr} from "../utils/getDeviceTimeZoneOffsetStr";
 import {getGpsTimeZoneOffsetStr} from "../utils/getGpsTimeZoneOffsetStr";
+import {IRallyPunkt} from "../api/api";
+import {vibratePushButton} from "../utils/vibrate";
 
 
 //import  NotifyResize = require("react-notify-resize");
@@ -64,6 +66,35 @@ export class CardPage extends React.Component<ICardPageProps,any> {
             }
         }
 
+        let punktList: any =
+            <div>{appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].num + ", " +
+                appState.rallyPunkt[appState.rallyPunktIndex].name +
+                "  (" + appState.rallyPunkt[appState.rallyPunktIndex].length + " км)" : ""}</div>;
+        if (appState.rallyPunkt.length > 1) {
+            punktList = appState.rallyPunkt.map((punkt: IRallyPunkt, index: number) => {
+
+                let style: any = {fontWeight: "normal"};
+                if (index === appState.rallyPunktIndex)
+                    style = {fontWeight: "bold"}
+                return (
+                    <div style={style}
+                         key={index}>{punkt.NPP + ". "}{punkt.num + " " + punkt.name + "  (" + punkt.length + " км)"}</div>
+                )
+            });
+            punktList.push(
+                <button key="uyw3rfqteuqy" type="button" className="btn btn-default btn-sm" onClick={()=>{
+                            vibratePushButton();
+                            if (appState.rallyPunktIndex===appState.rallyPunkt.length-1)
+                                appState.rallyPunktIndex=0;
+                            else
+                                appState.rallyPunktIndex++;
+                        }}
+                >
+                    выбрать другой пункт
+                </button>
+            );
+        }
+
 
         return (
             <div className="container">
@@ -88,18 +119,22 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 </tr>
                                 <tr>
                                     <td>Пункт</td>
-                                    <td style={gonkaStyle}>{appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].num + ", " + appState.rallyPunkt[appState.rallyPunktIndex].name + "  (" + appState.rallyPunkt[appState.rallyPunktIndex].length + " км)" : ""}</td>
+                                    <td style={gonkaStyle}>
+                                        {punktList}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Судья на пункте</td>
                                     <td style={userStyle}>{appState.user}</td>
                                 </tr>
                                 <tr>
-                                    <td>Время <span style={{whiteSpace:"nowrap"}}>{getDeviceTimeZoneOffsetStr()}</span></td>
+                                    <td>Время <span style={{whiteSpace:"nowrap"}}>{getDeviceTimeZoneOffsetStr()}</span>
+                                    </td>
                                     <td style={timeStyle}>{moment(new Date()).format("DD MMM YYYY,  HH:mm:ss")}</td>
                                 </tr>
                                 <tr>
-                                    <td>Время гонки <span style={{whiteSpace:"nowrap"}}>{getGpsTimeZoneOffsetStr()}</span></td>
+                                    <td>Время гонки <span
+                                        style={{whiteSpace:"nowrap"}}>{getGpsTimeZoneOffsetStr()}</span></td>
                                     <td style={timeStyle}>{moment(appState.gonkaTime).format("DD MMM YYYY,  HH:mm:ss")}{gpsOkSpan}</td>
                                 </tr>
                                 <tr>

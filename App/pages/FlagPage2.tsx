@@ -66,14 +66,14 @@ export class FlagPage2 extends React.Component<IFlagPageProps,any> {
     //
     // }
 
-     handleTimeClick = (finishTime: Date) => {
-         vibratePushButton();
-         showModal(<SetFinishRaceNumberModal finishTime={finishTime} onClose={()=>{}}/>);
-    //     vibratePushButton();
-    //     showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, appState.gonkaTime!)}
-    //                                  onClose={()=>{}}/>);
-    //     this.handleNumButtonClick("C");
-     }
+    handleTimeClick = (finishTime: Date) => {
+        vibratePushButton();
+        showModal(<SetFinishRaceNumberModal finishTime={finishTime} onClose={()=>{}}/>);
+        //     vibratePushButton();
+        //     showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, appState.gonkaTime!)}
+        //                                  onClose={()=>{}}/>);
+        //     this.handleNumButtonClick("C");
+    }
 
     handleCheckWithTimeClick = () => {
         vibratePushButton();
@@ -157,7 +157,7 @@ export class FlagPage2 extends React.Component<IFlagPageProps,any> {
 
                                 <h5 className="text-center" style={{marginTop:5, marginBottom:5}}><i
                                     className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
-                                    {"ПУНКТ: "} {appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].num + ", " + appState.rallyPunkt[appState.rallyPunktIndex].name + "  (" + appState.rallyPunkt[appState.rallyPunktIndex].length + " км)" : ""}
+                                    {"ПУНКТ: "} {appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].NPP + ". " + appState.rallyPunkt[appState.rallyPunktIndex].num + " " + appState.rallyPunkt[appState.rallyPunktIndex].name + "  (" + appState.rallyPunkt[appState.rallyPunktIndex].length + " км)" : ""}
                                 </h5>
                             </div>
                         </div>
@@ -179,8 +179,10 @@ export class FlagPage2 extends React.Component<IFlagPageProps,any> {
                                     <td style={{textAlign: "center"}}>
                                         <button className={"btn btn-default"} style={timeButtonStyle}
                                                 onClick={()=>{this.handleTimeClick(finishTime)}}>
-                                            <i className="fa fa-flag-checkered" style={{fontSize: 16, color: "green", paddingLeft: 5, paddingRight: 5}}></i>
-                                            <span style={{fontSize: 16, color: "green", paddingLeft: 5, paddingRight: 5}}>{moment(finishTime).format("HH:mm:ss")}</span>
+                                            <i className="fa fa-flag-checkered"
+                                               style={{fontSize: 16, color: "green", paddingLeft: 5, paddingRight: 5}}></i>
+                                            <span
+                                                style={{fontSize: 16, color: "green", paddingLeft: 5, paddingRight: 5}}>{moment(finishTime).format("HH:mm:ss")}</span>
                                         </button>
 
                                     </td>

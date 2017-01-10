@@ -115,6 +115,7 @@ export interface ILoadRallySpecUchAns extends IAns {
 export interface IRallyPunkt {
     id: number;
     num: string;
+    NPP: string;
     name: string;
     length: number;
 }

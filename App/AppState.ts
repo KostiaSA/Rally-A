@@ -229,6 +229,7 @@ export class AppState {
                     this.rallyPunkt = ans.rallyPunkt;
                     window.localStorage.setItem("rallyPunktDbts", ans.dbts!);
                     window.localStorage.setItem("rallyPunkt", JSON.stringify(ans.rallyPunkt));
+                    //console.log("ans.rallyPunkt",ans.rallyPunkt);
                 }
                 this.lastSyncroTime = new Date();
             })
@@ -368,6 +369,9 @@ export class AppState {
 
         if (window.localStorage.getItem("rallyPunkt")) {
             appState.rallyPunkt = JSON.parse(window.localStorage.getItem("rallyPunkt")!) as IRallyPunkt[];
+            if (!appState.rallyPunkt)
+                appState.rallyPunkt=[];
+
             appState.rallyPunktDbts = window.localStorage.getItem("rallyPunktDbts") || undefined;
         }
 
