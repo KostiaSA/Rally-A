@@ -124,7 +124,7 @@ export class AppState {
             legRegsId: legRegsId,
             rallyPunktId: this.rallyPunkt[this.rallyPunktIndex].id,
             checkTime: time,
-            penaltyTime: new Date(1990, 1, 1),
+            //penaltyTime: new Date(1990, 1, 1),
 
             mobileId: getRandomString(),
             mobileTime: new Date(),
@@ -321,7 +321,7 @@ export class AppState {
                             console.log("new Date(item.checkTime)", item.checkTime);
 
                             item.checkTime = new Date(item.checkTime);
-                            item.penaltyTime = new Date(item.penaltyTime);
+                            //item.penaltyTime = new Date(item.penaltyTime);
 
                             let oldItem: ICheckPoint | undefined = this.getCheckPointByRallyPunktAndLegRegsId(item.rallyPunktId, item.legRegsId);
                             if (oldItem) {

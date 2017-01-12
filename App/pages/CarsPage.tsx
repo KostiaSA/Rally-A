@@ -89,16 +89,16 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                         cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex].id, regItem.id);
                                         if (cp) {
                                             checkTime = moment(cp.checkTime).format("HH:mm:ss");
-                                            if (cp.penaltyTime && (cp.penaltyTime.getHours() > 0 || cp.penaltyTime.getMinutes() || cp.penaltyTime.getSeconds() > 0)) {
-                                                penaTime = "+ ";
-                                                if (cp.penaltyTime.getHours() > 0)
-                                                    penaTime += cp.penaltyTime.getHours() + " час ";
-                                                if (cp.penaltyTime.getMinutes() > 0)
-                                                    penaTime += cp.penaltyTime.getMinutes() + " мин ";
-                                                if (cp.penaltyTime.getSeconds() > 0)
-                                                    penaTime += cp.penaltyTime.getSeconds() + " сек ";
-
-                                            }
+                                            //if (cp.penaltyTime && (cp.penaltyTime.getHours() > 0 || cp.penaltyTime.getMinutes() || cp.penaltyTime.getSeconds() > 0)) {
+                                            //    penaTime = "+ ";
+                                            //    if (cp.penaltyTime.getHours() > 0)
+                                            //        penaTime += cp.penaltyTime.getHours() + " час ";
+                                            //    if (cp.penaltyTime.getMinutes() > 0)
+                                            //        penaTime += cp.penaltyTime.getMinutes() + " мин ";
+                                            //    if (cp.penaltyTime.getSeconds() > 0)
+                                            //        penaTime += cp.penaltyTime.getSeconds() + " сек ";
+                                            //
+                                            //}
                                             if (cp.syncOk !== true)
                                                 checkTimeColor = "coral";
                                         }

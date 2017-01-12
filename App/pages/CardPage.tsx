@@ -111,11 +111,11 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 <tbody>
                                 <tr>
                                     <td>Гонка</td>
-                                    <td style={gonkaStyle}>{appState.rallyHeader ? appState.rallyHeader.num + ", " + appState.rallyHeader.name : ""}</td>
+                                    <td style={gonkaStyle}>{appState.rallyHeader ? appState.rallyHeader.num + " " + appState.rallyHeader.name : ""}</td>
                                 </tr>
                                 <tr>
                                     <td>Этап</td>
-                                    <td style={gonkaStyle}>{appState.rallySpecUch ? appState.rallySpecUch[appState.currSpecUchIndex].num + ", " + appState.rallySpecUch[appState.currSpecUchIndex].name + "  (длина " + appState.rallySpecUch[appState.currSpecUchIndex].length + " км)" : ""}</td>
+                                    <td style={gonkaStyle}>{appState.rallySpecUch ? appState.rallySpecUch[appState.currSpecUchIndex].num + " " + appState.rallySpecUch[appState.currSpecUchIndex].name + "  (длина " + appState.rallySpecUch[appState.currSpecUchIndex].length + " км)" : ""}</td>
                                 </tr>
                                 <tr>
                                     <td>Пункт</td>
