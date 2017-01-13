@@ -35,7 +35,6 @@ $(document).ready(function () {
         window.location.href = host + "?" + keys;
 
         $("*").css("color", "silver");
-        $("*").css("cursor", "wait");
 
     });
 });
