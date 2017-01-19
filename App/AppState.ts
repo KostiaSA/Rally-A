@@ -30,6 +30,7 @@ export class AppState {
     loginPage: IAppPage;
     flagPage: IAppPage;
     flagPage2: IAppPage;
+    carsPage: IAppPage;
     cardPage: IAppPage;
 
     encryptKey: string;
@@ -293,9 +294,13 @@ export class AppState {
     //
     // }
 
-    load_CheckPoints_FromServer() {
+    load_CheckPoints_FromServer(reLoad: boolean = false) {
+
+
 
         if (this.rallyPunkt[this.rallyPunktIndex] && this.rallySpecUch) {
+
+
 
             let req: ILoadCheckPointsReq = {
                 cmd: LOAD_CHECKPOINTS_CMD,
@@ -303,11 +308,15 @@ export class AppState {
                 dbts: this.checkPointsDbts || ""
             };
 
+            if (reLoad)
+                req.dbts = "";
+
             let currPunkId = this.rallyPunkt[this.rallyPunktIndex].id;
 
             httpRequest<ILoadCheckPointsReq,ILoadCheckPointsAns>(req)
                 .then((ans: ILoadCheckPointsAns) => {
                     if (ans.checkPoints) {
+
 
                         // удаляем все со старых RallyPukt
                         this.checkPoints = this.checkPoints.filter((item: ICheckPoint) => {
@@ -341,6 +350,7 @@ export class AppState {
                         window.localStorage.setItem("checkPointsDbts", ans.dbts!);
                         if (needSaveToLocalStorage)
                             window.localStorage.setItem("checkPoints", JSON.stringify(ans.checkPoints));
+
                     }
                     this.lastSyncroTime = new Date();
                 })
@@ -370,7 +380,7 @@ export class AppState {
         if (window.localStorage.getItem("rallyPunkt")) {
             appState.rallyPunkt = JSON.parse(window.localStorage.getItem("rallyPunkt")!) as IRallyPunkt[];
             if (!appState.rallyPunkt)
-                appState.rallyPunkt=[];
+                appState.rallyPunkt = [];
 
             appState.rallyPunktDbts = window.localStorage.getItem("rallyPunktDbts") || undefined;
         }

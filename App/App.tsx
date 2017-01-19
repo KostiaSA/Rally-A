@@ -18,7 +18,7 @@ export interface IAppPage {
     icon: string;
     color: string;
     content: React.ReactElement<any>;
-    onClick?: ()=>void;
+    onClick?: () => void;
 }
 
 export let app: App;
@@ -67,12 +67,12 @@ export class App extends React.Component<any,any> {
         }
         this.pages.push(appState.flagPage2);
 
-        let carPage: IAppPage = {
+        appState.carsPage = {
             icon: "fa-car",
             color: "coral",
             content:<CarsPage></CarsPage>
         }
-        this.pages.push(carPage);
+        this.pages.push(appState.carsPage);
 
 
         let cogPage: IAppPage = {

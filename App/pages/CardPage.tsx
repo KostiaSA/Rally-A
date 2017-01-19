@@ -88,6 +88,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 appState.rallyPunktIndex=0;
                             else
                                 appState.rallyPunktIndex++;
+                            appState.load_CheckPoints_FromServer(true);
                         }}
                 >
                     выбрать другой пункт
