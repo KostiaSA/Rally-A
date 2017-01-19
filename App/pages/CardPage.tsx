@@ -82,6 +82,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                 )
             });
             punktList.push(
+                // todo доделать для кольцевых гонок
                 <button key="uyw3rfqteuqy" type="button" className="btn btn-default btn-sm" onClick={()=>{
                             vibratePushButton();
                             if (appState.rallyPunktIndex===appState.rallyPunkt.length-1)
