@@ -13,7 +13,9 @@ $(document).ready(function () {
     //console.log($(".sorted"));
     $(".sorted").click(function (value) {
         var colName = $(value.target).attr("data-sort");
-        console.log(colName);
+        if (!colName){
+            colName = $(value.currentTarget).attr("data-sort");
+        }
 
         var host = window.location.origin + window.location.pathname;
         var params = getUrlVars();
