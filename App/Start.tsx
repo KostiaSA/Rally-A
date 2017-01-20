@@ -52,6 +52,9 @@ if (getIsCordovaApp()) {
             //navigator.geolocation.getCurrentPosition((pos:Position)=>{console.log(new Date(pos.timestamp))});
             ReactDOM.render(<App ref={(e:any)=>setApp(e)}/>, document.body);
 
+            if ((window as any).device.model === "T72HM3G")
+                $("meta[name=viewport]").attr("content", "initial-scale=1.4");
+
             ///////////////////////////////////////////////////
             ///////////////////////////////////////////////////
 
@@ -108,7 +111,6 @@ if (getIsCordovaApp()) {
             //         "bufferSize": 0,        // Max elements in buffer
             //         "signalStrength": false // Return cell signal strength data
             //     });
-
 
 
             ///////////////////////////////////////////////////
