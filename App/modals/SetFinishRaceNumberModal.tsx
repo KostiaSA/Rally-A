@@ -234,7 +234,8 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
                             //this.props.checkpoint.checkTime=new Date(moment(this.props.checkpoint.checkTime).format("YYYY/MM/DD")+" "+$(this.checkTimeNative).val());
                             //this.props.checkpoint.syncOk=false;
                             appState.pushNewCheck(this.legRegistration.id, this.props.finishTime);
-                            let index=appState.finishList.findIndex((time:Date)=>{return time.getMilliseconds()===this.props.finishTime.getMilliseconds()});
+                            //let index=appState.finishList.findIndex((time:Date)=>{return time.getMilliseconds()===this.props.finishTime.getMilliseconds()});
+                            let index=appState.finishList.indexOf(appState.finishList.find((time:Date)=>{return time.getMilliseconds()===this.props.finishTime.getMilliseconds()})!);
                             if (index<0)
                                 alert("ошибка index<0");
                             else
