@@ -80,20 +80,29 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
         }
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
-        //this.pilot = appState.getPilot(this.legRegistration.pilotId);
-        if (this.legRegistration.id >= 0) {
 
-            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].id : -1, this.legRegistration.id);
+        if (appState.getIsCycleRally()) {
+            let nextPunkt = appState.getNextCycleRallyPunkByLegRegsId(this.legRegistration.id);
+            if (this.legRegistration.id >= 0 && nextPunkt)
+                vibrate([70, 70, 70, 70, 70]);
+            else if (this.legRegistration.id >= 0)
+                vibrate(300);
         }
         else {
-            this.checkpoint = undefined;
+            if (this.legRegistration.id >= 0) {
+
+                this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].id : -1, this.legRegistration.id);
+            }
+            else {
+                this.checkpoint = undefined;
+            }
+
+
+            if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
+                vibrate([70, 70, 70, 70, 70]);
+            else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
+                vibrate(300);
         }
-
-
-        if (this.legRegistration.id >= 0 && this.checkpoint === undefined)
-            vibrate([70, 70, 70, 70, 70]);
-        else if (this.legRegistration.id >= 0 && this.checkpoint !== undefined)
-            vibrate(300);
 
     }
 
@@ -126,8 +135,15 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
         }
 
         let saveEnabledClass = "hidden";
-        if (this.legRegistration.id >= 0 && this.checkpoint === undefined) {
-            saveEnabledClass = "";
+        if (appState.getIsCycleRally()) {
+            let nextPunkt = appState.getNextCycleRallyPunkByLegRegsId(this.legRegistration.id);
+            if (this.legRegistration.id >= 0 && nextPunkt)
+                saveEnabledClass = "";
+        }
+        else {
+            if (this.legRegistration.id >= 0 && this.checkpoint === undefined) {
+                saveEnabledClass = "";
+            }
         }
 
         return (
@@ -156,8 +172,9 @@ export class SetFinishRaceNumberModal extends React.Component<ISetFinishRaceNumb
 
                                         </td>
                                         <td style={{padding:5}}>
-                                            <span style={{color:"coral"}}>{this.legRegistration? this.legRegistration.autoName:"" + "  "}</span>
-                                            <span>{this.legRegistration?this.legRegistration.pilotName:""}</span>
+                                            <span
+                                                style={{color:"coral"}}>{this.legRegistration ? this.legRegistration.autoName : "" + "  "}</span>
+                                            <span>{this.legRegistration ? this.legRegistration.pilotName : ""}</span>
                                         </td>
                                     </tr>
                                     </tbody>

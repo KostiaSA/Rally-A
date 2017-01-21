@@ -82,7 +82,7 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                 )
             });
 
-            if (appState.getIs_кольцевая_гонка()) {
+            if (appState.getIsCycleRally()) {
                 punktList.push(
                     // todo доделать для кольцевых гонок
                     <div key="uyw3r2234fqtuqy" style={{color:"violet"}}>

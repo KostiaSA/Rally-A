@@ -75,13 +75,22 @@ export class AppState {
         this.checkPoints = [];
     }
 
-    getIs_кольцевая_гонка():boolean {
+    getIsCycleRally(): boolean {
         //console.log("appState.rallySpecUch",getDeepClone(appState.rallySpecUch));
         if (appState.rallySpecUch && appState.rallySpecUch[appState.currSpecUchIndex] && appState.rallySpecUch[appState.currSpecUchIndex].cycleCount > 0) {
             return true;
         }
         else
             return false;
+    }
+
+    getCycleCount(): number {
+        //console.log("appState.rallySpecUch",getDeepClone(appState.rallySpecUch));
+        if (appState.rallySpecUch && appState.rallySpecUch[appState.currSpecUchIndex] && appState.rallySpecUch[appState.currSpecUchIndex].cycleCount) {
+            return appState.rallySpecUch[appState.currSpecUchIndex].cycleCount;
+        }
+        else
+            return 0;
     }
 
     getIsLogined() {
@@ -100,6 +109,23 @@ export class AppState {
 
     getCheckPointByRallyPunktAndLegRegsId(punktId: number, legRegsId: number): ICheckPoint | undefined {
         return (this.checkPoints || []).find((item: ICheckPoint) => item.rallyPunktId === punktId && item.legRegsId === legRegsId);
+    }
+
+    getCheckPointsByLegRegsId(legRegsId: number): ICheckPoint[] {
+        return (this.checkPoints || []).filter((item: ICheckPoint) => item.legRegsId === legRegsId);
+    }
+
+    getNextCycleRallyPunkByLegRegsId(legRegsId: number): IRallyPunkt | undefined {
+        let пройденные = this.getCheckPointsByLegRegsId(legRegsId);
+
+        for (let i = 0; i < this.rallyPunkt.length; i++) {
+            let punkt = this.rallyPunkt[i];
+            if (!пройденные.find((checkPoint: ICheckPoint) => checkPoint.rallyPunktId === punkt.id)) {
+                return punkt;
+            }
+        }
+
+        return undefined;
     }
 
     getCheckPointByMobileId(mobileId: string): ICheckPoint | undefined {
@@ -131,20 +157,38 @@ export class AppState {
 
     getNewCheck(legRegsId: number, time: Date): ICheckPoint {
 
-        let check: ICheckPoint = {
-            legRegsId: legRegsId,
-            rallyPunktId: this.rallyPunkt[this.rallyPunktIndex].id,
-            checkTime: time,
-            //penaltyTime: new Date(1990, 1, 1),
+        if (appState.getIsCycleRally()) {
+            let check: ICheckPoint = {
+                legRegsId: legRegsId,
+                rallyPunktId: this.getNextCycleRallyPunkByLegRegsId(legRegsId)!.id,
+                checkTime: time,
+                //penaltyTime: new Date(1990, 1, 1),
 
-            mobileId: getRandomString(),
-            mobileTime: new Date(),
-            mobileLogin: this.login,
-            mobileDevice: platform.description!,
-            syncOk: false
-        };
+                mobileId: getRandomString(),
+                mobileTime: new Date(),
+                mobileLogin: this.login,
+                mobileDevice: platform.description!,
+                syncOk: false
+            };
+            return check;
 
-        return check;
+        }
+        else {
+            let check: ICheckPoint = {
+                legRegsId: legRegsId,
+                rallyPunktId: this.rallyPunkt[this.rallyPunktIndex].id,
+                checkTime: time,
+                //penaltyTime: new Date(1990, 1, 1),
+
+                mobileId: getRandomString(),
+                mobileTime: new Date(),
+                mobileLogin: this.login,
+                mobileDevice: platform.description!,
+                syncOk: false
+            };
+            return check;
+        }
+
     }
 
     pushNewFinish(time: Date) {
@@ -315,6 +359,9 @@ export class AppState {
                 rallyPunktId: this.rallyPunkt[this.rallyPunktIndex].id,
                 dbts: this.checkPointsDbts || ""
             };
+
+            if (this.getIsCycleRally())
+                req.rallyPunktId = -100;
 
             if (reLoad)
                 req.dbts = "";
