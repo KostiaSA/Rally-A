@@ -81,9 +81,19 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                          key={index}>{punkt.NPP + ". "}{punkt.num + " " + punkt.name + "  (" + punkt.length + " км)"}</div>
                 )
             });
-            punktList.push(
-                // todo доделать для кольцевых гонок
-                <button key="uyw3rfqteuqy" type="button" className="btn btn-default btn-sm" onClick={()=>{
+
+            if (appState.getIs_кольцевая_гонка()) {
+                punktList.push(
+                    // todo доделать для кольцевых гонок
+                    <div key="uyw3r2234fqtuqy" style={{color:"violet"}}>
+                        кольцевая гонка
+                    </div>
+                );
+            }
+            else {
+                punktList.push(
+                    // todo доделать для кольцевых гонок
+                    <button key="uyw3rfqteuqy" type="button" className="btn btn-default btn-sm" onClick={()=>{
                             vibratePushButton();
                             if (appState.rallyPunktIndex===appState.rallyPunkt.length-1)
                                 appState.rallyPunktIndex=0;
@@ -91,10 +101,11 @@ export class CardPage extends React.Component<ICardPageProps,any> {
                                 appState.rallyPunktIndex++;
                             appState.load_CheckPoints_FromServer(true);
                         }}
-                >
-                    выбрать другой пункт
-                </button>
-            );
+                    >
+                        выбрать другой пункт
+                    </button>
+                );
+            }
         }
 
 

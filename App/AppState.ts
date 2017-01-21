@@ -12,6 +12,7 @@ import {getRandomString} from "./utils/getRandomString";
 import {showToast} from "./utils/showToast";
 import moment = require("moment");
 import {getIsCordovaApp} from "./utils/getIsCordovaApp";
+import {getDeepClone} from "./utils/getDeepClone";
 
 export class AppState {
     @observable sessionId: string;
@@ -72,6 +73,15 @@ export class AppState {
         this.rallyPunkt = [];
         this.legRegistration = [];
         this.checkPoints = [];
+    }
+
+    getIs_кольцевая_гонка():boolean {
+        //console.log("appState.rallySpecUch",getDeepClone(appState.rallySpecUch));
+        if (appState.rallySpecUch && appState.rallySpecUch[appState.currSpecUchIndex] && appState.rallySpecUch[appState.currSpecUchIndex].cycleCount > 0) {
+            return true;
+        }
+        else
+            return false;
     }
 
     getIsLogined() {
@@ -297,9 +307,7 @@ export class AppState {
     load_CheckPoints_FromServer(reLoad: boolean = false) {
 
 
-
         if (this.rallyPunkt[this.rallyPunktIndex] && this.rallySpecUch) {
-
 
 
             let req: ILoadCheckPointsReq = {
