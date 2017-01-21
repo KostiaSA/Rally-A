@@ -128,6 +128,20 @@ export class AppState {
         return undefined;
     }
 
+    getLastCycleRallyPunkByLegRegsId(legRegsId: number): IRallyPunkt | undefined {
+        let пройденные = this.getCheckPointsByLegRegsId(legRegsId);
+
+        let punkt:IRallyPunkt| undefined =undefined;
+        for (let i = 0; i < this.rallyPunkt.length; i++) {
+            if (!пройденные.find((checkPoint: ICheckPoint) => checkPoint.rallyPunktId === this.rallyPunkt[i].id)) {
+                return punkt;
+            }
+            punkt = this.rallyPunkt[i];
+        }
+
+        return punkt;
+    }
+
     getCheckPointByMobileId(mobileId: string): ICheckPoint | undefined {
         return (this.checkPoints || []).find((item: ICheckPoint) => item.mobileId === mobileId);
     }

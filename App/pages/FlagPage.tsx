@@ -41,6 +41,13 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     };
 
+    appState_rallyPunktIndex(): number {
+        if (appState.getIsCycleRally())
+            return 0;
+        else
+            return appState.rallyPunktIndex;
+    }
+
     handleNumButtonClick = (num: string) => {
         vibratePushButton();
         if (num === "C")
@@ -54,9 +61,9 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
         }
 
         this.legRegistration = appState.getLegRegistrationByRaceNumber(this.raceNumber);
-        if (this.legRegistration.id>=0) {
+        if (this.legRegistration.id >= 0) {
             //this.pilot = appState.getPilot(this.legRegistration.pilotId);
-            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].id : -1, this.legRegistration.id);
+            this.checkpoint = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[this.appState_rallyPunktIndex()] ? appState.rallyPunkt[this.appState_rallyPunktIndex()].id : -1, this.legRegistration.id);
         }
         else
             this.checkpoint = undefined;
@@ -73,14 +80,28 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
     handleCheckClick = () => {
         vibratePushButton();
-        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, appState.gonkaTime!)}
+
+        // срезаем секунды
+        let gonkaTime= moment(appState.gonkaTime!) as any;
+        gonkaTime.milliseconds(0);
+        gonkaTime.seconds(0);
+        let gonkaTime2=gonkaTime.toDate();
+
+        showModal(<CheckTimeNewModal checkpoint={appState.getNewCheck(this.legRegistration.id, gonkaTime2)}
                                      onClose={()=>{}}/>);
         this.handleNumButtonClick("C");
     }
 
     handleCheckWithTimeClick = () => {
         vibratePushButton();
-        appState.pushNewCheck(this.legRegistration.id, appState.gonkaTime!);
+
+        // срезаем секунды
+        let gonkaTime= moment(appState.gonkaTime!) as any;
+        gonkaTime.milliseconds(0);
+        gonkaTime.seconds(0);
+        let gonkaTime2=gonkaTime.toDate();
+
+        appState.pushNewCheck(this.legRegistration.id, gonkaTime2);
         this.handleNumButtonClick("C");
     }
 
@@ -152,7 +173,7 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
 
                                 <h5 className="text-center" style={{marginTop:5, marginBottom:5}}><i
                                     className={"fa fa-flag-checkered"} style={{fontSize:20, marginRight:10}}></i>
-                                    {"ПУНКТ: "} {appState.rallyPunkt[appState.rallyPunktIndex] ? appState.rallyPunkt[appState.rallyPunktIndex].NPP + ". " + appState.rallyPunkt[appState.rallyPunktIndex].num + " " + appState.rallyPunkt[appState.rallyPunktIndex].name + "  (" + appState.rallyPunkt[appState.rallyPunktIndex].length + " км)" : ""}
+                                    {"ПУНКТ: "} {appState.rallyPunkt[this.appState_rallyPunktIndex()] ? appState.rallyPunkt[this.appState_rallyPunktIndex()].NPP + ". " + appState.rallyPunkt[this.appState_rallyPunktIndex()].num + " " + appState.rallyPunkt[this.appState_rallyPunktIndex()].name + "  (" + appState.rallyPunkt[this.appState_rallyPunktIndex()].length + " км)" : ""}
                                 </h5>
                             </div>
                         </div>
@@ -162,27 +183,28 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>
                         <table style={{width:"100%"}}>
                             <tbody>
-                                <tr>
-                                    <td style={{textAlign:"center",padding:5}}>
-                                        <span>N:</span>
-                                        <span style={{  color: "teal",
+                            <tr>
+                                <td style={{textAlign:"center",padding:5}}>
+                                    <span>N:</span>
+                                    <span style={{  color: "teal",
                                             fontWeight: "bold",
                                             border: "teal solid 1px",
                                             padding: 3
                                          }}
-                                        >
+                                    >
                                           {this.raceNumber}
                                        </span>
 
-                                    </td>
-                                    <td style={{padding:5}}>
-                                        <span style={{color:"coral"}}>{this.legRegistration?this.legRegistration.autoName:"" + "  "}</span>
-                                        <span>{this.legRegistration?this.legRegistration.pilotName:""}</span>
-                                        <div style={{ color:"green"}}>
-                                            { this.checkpoint ? "check: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
-                                        </div>
-                                    </td>
-                                </tr>
+                                </td>
+                                <td style={{padding:5}}>
+                                    <span
+                                        style={{color:"coral"}}>{this.legRegistration ? this.legRegistration.autoName : "" + "  "}</span>
+                                    <span>{this.legRegistration ? this.legRegistration.pilotName : ""}</span>
+                                    <div style={{ color:"green"}}>
+                                        { this.checkpoint ? "start: " + moment(this.checkpoint.checkTime).format("HH:mm:ss") : ""}
+                                    </div>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -250,11 +272,11 @@ export class FlagPage extends React.Component<IFlagPageProps,any> {
                         <button className={"btn btn-lg btn-success "+checkEnabledClass}
                                 style={okButtonStyle}
                                 onClick={this.handleCheckClick}>
-                            check
+                            start
                         </button>
                         <button className={"btn btn-lg btn-success "+checkEnabledClass} style={okButtonStyle}
                                 onClick={this.handleCheckWithTimeClick}>
-                            check {moment(appState.gonkaTime).format("HH:mm:ss")}
+                            start {moment(appState.gonkaTime).format("HH:mm")}:00
                         </button>
                     </div>
                     <div className="col-md-10 col-md-offset-1" style={{ fontSize:18}}>

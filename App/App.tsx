@@ -54,7 +54,7 @@ export class App extends React.Component<any,any> {
         this.pages.push(appState.cardPage);
 
         appState.flagPage = {
-            icon: "fa-flag-checkered",
+            icon: "fa-clock-o",
             color: "black",
             content:<FlagPage></FlagPage>
         }
