@@ -126,9 +126,7 @@ export class CarsPage extends React.Component<ICarsPageProps, any> {
                                         старт
                                     </th>
                                     <th>
-                                        <a style={{textDecoration: "underline"}} onClick={() => {
-                                            this.sort = "пилот"
-                                        }}>пилот</a>
+                                        пилот
                                     </th>
                                     <th style={{textAlign: "center"}}>
                                         <a style={{textDecoration: "underline"}} onClick={() => {

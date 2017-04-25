@@ -78,6 +78,28 @@ export class AppState {
         this.checkPoints = [];
     }
 
+    getTimeFromStr6(newTimeStr:string):Date | null {
+        let checkTime = new Date();
+        if (!newTimeStr || typeof newTimeStr !== "string")
+            return null;
+
+        if (newTimeStr.length !== 6) {
+            return null;
+        }
+
+        let hh = parseInt(newTimeStr.substr(0, 2));
+        let mm = parseInt(newTimeStr.substr(2, 2));
+        let ss = parseInt(newTimeStr.substr(4, 2));
+
+        if (hh > 23 || mm > 59 || ss > 59 || hh < 0 || mm < 0 || ss < 0 || isNaN(hh) || isNaN(mm) || isNaN(ss)) {
+            return null;
+        }
+
+        checkTime.setHours(hh,mm,ss);
+        return checkTime;
+    }
+
+
     getIsCycleRally(): boolean {
         //console.log("appState.rallySpecUch",getDeepClone(appState.rallySpecUch));
         if (appState.rallySpecUch && appState.rallySpecUch[appState.currSpecUchIndex] && appState.rallySpecUch[appState.currSpecUchIndex].cycleCount > 0) {
