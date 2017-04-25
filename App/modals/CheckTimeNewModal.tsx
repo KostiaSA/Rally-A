@@ -48,17 +48,17 @@ export class CheckTimeNewModal extends React.Component<ICheckTimeNewModalProps, 
 
 //    @observable timeЫекштп: number;
 
-    getTimeAsStr(timeNum: number): string {
-        let str = this.pad(timeNum, 6);
-        return str.substr(0, 2) + ":" + str.substr(2, 2) + ":" + str.substr(4, 2);
-    }
-
-    pad(num: number, size: number) {
-        let s = num + "";
-        while (s.length < size)
-            s = "0" + s;
-        return s;
-    }
+    // getTimeAsStr(timeNum: number): string {
+    //     let str = this.pad(timeNum, 6);
+    //     return str.substr(0, 2) + ":" + str.substr(2, 2) + ":" + str.substr(4, 2);
+    // }
+    //
+    // pad(num: number, size: number) {
+    //     let s = num + "";
+    //     while (s.length < size)
+    //         s = "0" + s;
+    //     return s;
+    // }
 
     //checkTimeNative: any;
 
@@ -131,7 +131,7 @@ export class CheckTimeNewModal extends React.Component<ICheckTimeNewModalProps, 
                                     padding: 3
                                 }}
                                 >
-                                 {appState.getTimeFromStr6(this.timeString) ? moment(appState.getTimeFromStr6(this.timeString)!).format("hh:mm:ss") : this.timeString}
+                                 {appState.getTimeFromStr6(this.timeString) ? moment(appState.getTimeFromStr6(this.timeString)!).format("HH:mm:ss") : this.timeString}
                                 </span>
 
                                 <div className="row" style={{marginTop: 20, textAlign:"center"}}>
@@ -192,6 +192,8 @@ export class CheckTimeNewModal extends React.Component<ICheckTimeNewModalProps, 
                                         </button>
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -209,7 +211,7 @@ export class CheckTimeNewModal extends React.Component<ICheckTimeNewModalProps, 
                             this.props.checkpoint.syncOk = false;
                             appState.checkPoints.push(this.props.checkpoint);
                             //showToast("записано " + $(this.checkTimeNative).val());
-                            showToast("записано " + moment(appState.getTimeFromStr6(this.timeString)!).format("hh:mm:ss"));
+                            showToast("записано " + moment(appState.getTimeFromStr6(this.timeString)!).format("HH:mm:ss"));
                         }}
                     >
                         Сохранить
