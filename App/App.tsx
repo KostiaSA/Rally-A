@@ -54,21 +54,21 @@ export class App extends React.Component<any,any> {
         this.pages.push(appState.cardPage);
 
         appState.flagPage = {
-            icon: "fa-clock-o",
+            icon: "fa fa-car",
             color: "black",
             content:<FlagPage></FlagPage>
         }
         this.pages.push(appState.flagPage);
 
         appState.flagPage2 = {
-            icon: "fa-flag-checkered",
+            icon: "fa-clock-o",
             color: "green",
             content:<FlagPage2></FlagPage2>
         }
         this.pages.push(appState.flagPage2);
 
         appState.carsPage = {
-            icon: "fa-car",
+            icon: "fa-bars",
             color: "coral",
             content:<CarsPage></CarsPage>
         }

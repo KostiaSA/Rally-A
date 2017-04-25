@@ -14,6 +14,9 @@ import moment = require("moment");
 import {getIsCordovaApp} from "./utils/getIsCordovaApp";
 import {getDeepClone} from "./utils/getDeepClone";
 
+import array_prototype_find=require('array.prototype.find');
+array_prototype_find.shim();
+
 export class AppState {
     @observable sessionId: string;
     @observable login: string;
@@ -116,11 +119,11 @@ export class AppState {
     }
 
     getNextCycleRallyPunkByLegRegsId(legRegsId: number): IRallyPunkt | undefined {
-        let пройденные = this.getCheckPointsByLegRegsId(legRegsId);
+        let passed = this.getCheckPointsByLegRegsId(legRegsId);
 
         for (let i = 0; i < this.rallyPunkt.length; i++) {
             let punkt = this.rallyPunkt[i];
-            if (!пройденные.find((checkPoint: ICheckPoint) => checkPoint.rallyPunktId === punkt.id)) {
+            if (!passed.find((checkPoint: ICheckPoint) => checkPoint.rallyPunktId === punkt.id)) {
                 return punkt;
             }
         }
@@ -129,11 +132,11 @@ export class AppState {
     }
 
     getLastCycleRallyPunkByLegRegsId(legRegsId: number): IRallyPunkt | undefined {
-        let пройденные = this.getCheckPointsByLegRegsId(legRegsId);
+        let passed = this.getCheckPointsByLegRegsId(legRegsId);
 
-        let punkt:IRallyPunkt| undefined =undefined;
+        let punkt: IRallyPunkt| undefined = undefined;
         for (let i = 0; i < this.rallyPunkt.length; i++) {
-            if (!пройденные.find((checkPoint: ICheckPoint) => checkPoint.rallyPunktId === this.rallyPunkt[i].id)) {
+            if (!passed.find((checkPoint: ICheckPoint) => checkPoint.rallyPunktId === this.rallyPunkt[i].id)) {
                 return punkt;
             }
             punkt = this.rallyPunkt[i];
@@ -322,6 +325,8 @@ export class AppState {
                     this.legRegistrationDbts = ans.dbts;
                     this.legRegistration = ans.legRegistration;
 
+                    console.log("LoadLegRegistrationReq ");
+
                     // this.legRegistration.forEach((item: ILegRegistration) => {
                     //     item.startTime = new Date(item.startTime);
                     // });
@@ -388,7 +393,7 @@ export class AppState {
 
 
                         // удаляем все со старых RallyPukt
-                        this.checkPoints = this.checkPoints.filter((item: ICheckPoint) => {
+                        let newCheckPoints = this.checkPoints.filter((item: ICheckPoint) => {
                             return item.rallyPunktId === currPunkId || item.syncOk !== true
                         });
 
@@ -404,18 +409,20 @@ export class AppState {
                             let oldItem: ICheckPoint | undefined = this.getCheckPointByRallyPunktAndLegRegsId(item.rallyPunktId, item.legRegsId);
                             if (oldItem) {
                                 if (oldItem.syncOk === true && JSON.stringify(oldItem) !== JSON.stringify(item)) {
-                                    this.checkPoints![index] = item;
+                                    newCheckPoints![index] = item;
                                     needSaveToLocalStorage = true;
                                 }
                             }
                             else {
-                                this.checkPoints.push(item);
+                                newCheckPoints.push(item);
                                 needSaveToLocalStorage = true;
                             }
 
                         });
 
                         this.checkPointsDbts = ans.dbts;
+                        this.checkPoints = newCheckPoints;
+
                         window.localStorage.setItem("checkPointsDbts", ans.dbts!);
                         if (needSaveToLocalStorage)
                             window.localStorage.setItem("checkPoints", JSON.stringify(ans.checkPoints));

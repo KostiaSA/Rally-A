@@ -14,8 +14,10 @@ let developDir: IConfig = {
 
 let cloudDir: IConfig = {
     appName: "Rally 1.0",
-    apiUrl: "http://online.bajarussia.com/api",
-    apkUrl: "http://online.bajarussia.com/downloads/r.apk",
+    //apiUrl: "http://online.bajarussia.com/api",
+    //apkUrl: "http://online.bajarussia.com/downloads/r.apk",
+    apiUrl: "http://81.177.175.48/api",
+    apkUrl: "http://81.177.175.48/downloads/r.apk",
 }
 
 

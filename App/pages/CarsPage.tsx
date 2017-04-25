@@ -21,7 +21,7 @@ export interface ICarsPageProps {
 }
 
 @observer
-export class CarsPage extends React.Component<ICarsPageProps,any> {
+export class CarsPage extends React.Component<ICarsPageProps, any> {
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
@@ -32,6 +32,7 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
 
     };
 
+
     getTotalCount(): number {
         return (appState.legRegistration || []).length;
     }
@@ -40,8 +41,37 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
         return appState.checkPoints.length;
     }
 
+    @observable sort: string = "старт"; // номер check
+
+    getChecktimeForSort(regItem: ILegRegistration): Date {
+        let cp: ICheckPoint | undefined;
+        if (appState.rallyPunkt[appState.rallyPunktIndex]) {
+            cp = appState.getCheckPointByRallyPunktAndLegRegsId(appState.rallyPunkt[appState.rallyPunktIndex].id, regItem.id);
+            if (cp)
+                return cp.checkTime;
+            else
+                return new Date(2200, 0, 0);
+
+        }
+        return new Date(2200, 0, 0);
+    }
+
+    pad(num: number, size: number): string {
+        var s = "000000000" + num;
+        return s.substr(s.length - size);
+    }
+
+    formatTime(date: Date): string {
+        if (!date || !(date instanceof Date))
+            return "";
+        let hh = date.getUTCHours();
+        let mm = date.getUTCMinutes();
+        let ss = date.getUTCSeconds();
+        return (this.pad(hh, 2) + ":" + this.pad(mm, 2) + ":" + this.pad(ss, 2)).replace("00:00:00", "");
+    }
+
     render(): any {
-        console.log("render Cars page");
+        console.log("render CarsPage");
 
         let gonkaStyle: CSSProperties = {
             color: "olive",
@@ -58,29 +88,62 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
             fontWeight: "bold"
         };
 
+        let intCompare = (x: string, y: string): number => {
+            return 0;
+        };
+
+        let sortCompare = (x: ILegRegistration, y: ILegRegistration): number => {
+            if (this.sort === "пилот") {
+                return x.pilotName.localeCompare(y.pilotName);
+            }
+            else if (this.sort === "номер") {
+                return x.raceNumber.localeCompare(y.raceNumber);
+            }
+            else if (this.sort === "check") {
+                let a = this.getChecktimeForSort(x);
+                let b = this.getChecktimeForSort(y);
+                return a.getTime() - b.getTime();
+            }
+            return 0
+        };
+
 
         return (
             <div className="container">
-                <div className="row" style={{ marginTop:20 }}>
+                <div className="row" style={{marginTop: 20}}>
                     <div className="col-md-10 col-md-offset-1">
                         <div className="panel panel-default">
                             <div className="panel-heading">
                                 <h4 className="text-center">
-                                    <i className={"fa fa-car"} style={{fontSize:16, marginRight:10}}/>
+                                    <i className={"fa fa-car"} style={{fontSize: 16, marginRight: 10}}/>
                                     Участники этапа ({this.getCheckedCount()}/{this.getTotalCount()})
                                 </h4>
                             </div>
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th style={{textAlign: "center"}}>старт</th>
-                                    <th>пилот</th>
-                                    <th style={{textAlign: "center"}}>номер</th>
-                                    <th style={{textAlign: "center"}}>check</th>
+                                    <th style={{textAlign: "center"}}>
+                                        старт
+                                    </th>
+                                    <th>
+                                        <a style={{textDecoration: "underline"}} onClick={() => {
+                                            this.sort = "пилот"
+                                        }}>пилот</a>
+                                    </th>
+                                    <th style={{textAlign: "center"}}>
+                                        <a style={{textDecoration: "underline"}} onClick={() => {
+                                            this.sort = "номер"
+                                        }}>номер</a>
+                                    </th>
+                                    <th style={{textAlign: "center"}}>
+                                        <a style={{textDecoration: "underline"}} onClick={() => {
+                                            this.sort = "check"
+                                        }}>check</a>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                { (appState.legRegistration || []).map((regItem: ILegRegistration, index: number) => {
+                                { (appState.legRegistration.slice().sort(sortCompare) || []).map((regItem: ILegRegistration, index: number) => {
                                     //let pilot = appState.getPilot(regItem.pilotId);
                                     let checkTime = "";
                                     let checkTimeColor = "green";
@@ -95,15 +158,16 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                         }
                                     }
 
-                                    let lastPunktTag:any=null;
+                                    let lastPunktTag: any = null;
                                     if (appState.getIsCycleRally()) {
                                         let lastPunkt = appState.getLastCycleRallyPunkByLegRegsId(regItem.id);
                                         if (lastPunkt) {
                                             cp = appState.getCheckPointByRallyPunktAndLegRegsId(lastPunkt.id, regItem.id);
                                             if (cp) {
                                                 checkTime = moment(cp.checkTime).format("HH:mm:ss");
-                                               // console.log("lastPunkt",getDeepClone(lastPunkt));
-                                                lastPunktTag=<span style={{color: checkTimeColor}}>({lastPunkt.num+' '+lastPunkt.name})</span>
+                                                // console.log("lastPunkt",getDeepClone(lastPunkt));
+                                                lastPunktTag = <span
+                                                    style={{color: checkTimeColor}}>({lastPunkt.num + ' ' + lastPunkt.name})</span>
                                                 if (cp.syncOk !== true)
                                                     checkTimeColor = "coral";
 
@@ -122,10 +186,11 @@ export class CarsPage extends React.Component<ICarsPageProps,any> {
                                             </td>
                                             <td style={{textAlign: "center", color: "teal"}}>{regItem.raceNumber}</td>
                                             <td style={{textAlign: "center"}}
-                                                onClick={()=>{
-                                                    if (cp){
-                                                      vibratePushButton();
-                                                      showModal(<CheckTimeUpdateModal checkpoint={cp} onClose={()=>{}}/>);
+                                                onClick={() => {
+                                                    if (cp) {
+                                                        vibratePushButton();
+                                                        showModal(<CheckTimeUpdateModal checkpoint={cp} onClose={() => {
+                                                        }}/>);
                                                     }
                                                 }}
                                             >
